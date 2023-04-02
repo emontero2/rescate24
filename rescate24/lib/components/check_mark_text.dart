@@ -10,7 +10,7 @@ class CheckMarkText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         children: [
           SvgPicture.asset(icon),

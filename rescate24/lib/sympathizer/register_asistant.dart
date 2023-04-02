@@ -7,7 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:im_stepper/stepper.dart';
+import 'package:provider/provider.dart';
 import 'package:rescate24/components/my_button.dart';
+import 'package:rescate24/models/Person.dart';
+import 'package:rescate24/models/PersonModel.dart';
 import 'package:rescate24/sympathizer/step1.dart';
 import 'package:rescate24/sympathizer/step2.dart';
 import 'package:rescate24/sympathizer/step3.dart';
@@ -17,6 +20,7 @@ import 'package:flutter_face_api/face_api.dart' as Regula;
 
 import '../components/my_back_button.dart';
 import '../components/my_bottom_bar.dart';
+import '../components/my_icon_button.dart';
 
 class RegisterAsistant extends StatefulWidget {
   const RegisterAsistant({Key? key}) : super(key: key);
@@ -33,25 +37,33 @@ final phoneNumberController = TextEditingController();
 final emailController = TextEditingController();
 
 int activeStep = 0;
+
 String _liveness = "nil";
 String _name = "";
+String _lastName = "";
+String _genre = "";
+String _birthDay = "";
+String _documentNumber = "";
 Image _portrait = Image.asset("lib/images/portrait.png");
 Image _docImage = Image.asset("lib/images/id.png");
 List<List<String>> _scenarios = [];
-String _selectedScenario = "DocType";
+String _selectedScenario = "Ocr";
 Uint8List? _portraitBytes = null;
 Uint8List? _docImageBytes = null;
 
 Widget getActiveStepWidget() {
   if (activeStep == 0) {
-    return Step1();
+    return const Step1();
   } else if (activeStep == 1) {
-    return Step2();
+    return const Step2();
   } else if (activeStep == 2) {
     return StepResult(
-      name: _name.isNotEmpty ? _name.split(" ")[0] : "No encontrado",
-      last_name: _name.isNotEmpty ? _name.split(" ")[1] : "No encontrado",
+      name: _name,
+      last_name: _lastName,
       doc_image: _portraitBytes,
+      docNumber: _documentNumber,
+      birthDay: _birthDay,
+      genre: _genre,
     );
   } else if (activeStep == 3) {
     return Step3(
@@ -59,7 +71,7 @@ Widget getActiveStepWidget() {
       provinceController: provinceController,
       sectorController: sectorController,
       phoneNumberController: phoneNumberController,
-      phoneNumberResidenceController: phoneNumberController,
+      phoneNumberResidenceController: phoneNumberResidenceController,
       emailController: emailController,
     );
   } else {
@@ -110,22 +122,39 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   void handleCompletion(DocumentReaderCompletion completion) {
     if (completion.action == DocReaderAction.COMPLETE ||
         completion.action == DocReaderAction.TIMEOUT) {
-      print("Error al leer los documentos");
+      if (completion.results != null) {
+        activeStep++;
+        displayResults(completion.results!);
+        print(completion.results);
+      } else {
+        print("Error al leer los documentos");
+      }
     } else {
-      activeStep++;
-      displayResults(completion.results!);
+      print("Error al leer los documentos");
     }
   }
 
   displayResults(DocumentReaderResults results) async {
-    var name = await results
-        .textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+    var name =
+        await results.textFieldValueByType(EVisualFieldType.FT_FIRST_NAME);
+    var lastName =
+        await results.textFieldValueByType(EVisualFieldType.FT_LAST_NAME);
+    var genre = await results.textFieldValueByType(EVisualFieldType.FT_SEX);
+    var documentNumber =
+        await results.textFieldValueByType(EVisualFieldType.FT_DOCUMENT_NUMBER);
+    var birthDay =
+        await results.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
     var doc = await results
         .graphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
     var portrait =
         await results.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+    print("name: $name");
     setState(() {
-      _name = name ?? "";
+      _name = name ?? "No encontrado";
+      _lastName = lastName ?? "No encontrado";
+      _documentNumber = documentNumber ?? "No encontrado";
+      _birthDay = birthDay ?? "No encontrado";
+      _genre = genre ?? "No encontrado";
       _docImage = Image.asset('assets/images/id.png');
       _portrait = Image.asset('assets/images/portrait.png');
       if (doc != null) {
@@ -221,7 +250,103 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             result.liveness == Regula.LivenessStatus.PASSED
                 ? "passed"
                 : "unknown");
+        activeStep++;
       });
+
+  Widget getBottomButtons() {
+    if (activeStep == 0) {
+      return GestureDetector(
+          onTap: () {
+            setState(() {
+              if (activeStep == 4) {
+                Navigator.pop(context);
+              } else {
+                if (activeStep == 0) {
+                  liveness();
+                } else {
+                  print(activeStep);
+                  activeStep++;
+                }
+              }
+            });
+          },
+          child: getButton());
+    } else if (activeStep == 4) {
+      return Column(
+        children: [
+          GestureDetector(
+              onTap: () {
+                dispose();
+              },
+              child: const MyIconButton(title: "Asistente de Registro")),
+          const SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (activeStep == 4) {
+                    Navigator.pop(context);
+                  } else {
+                    if (activeStep == 0) {
+                      liveness();
+                    } else {
+                      print(activeStep);
+                      activeStep++;
+                    }
+                  }
+                });
+              },
+              child: getButton())
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+              onTap: () {
+                setState(() {
+                  activeStep--;
+                });
+              },
+              child: const MyButton(
+                title: "Volver",
+                isGrey: true,
+              )),
+          GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (activeStep == 4) {
+                    Navigator.pop(context);
+                    dispose();
+                  } else {
+                    if (activeStep == 1) {
+                      DocumentReader.showScanner();
+                    } else if (activeStep == 2) {
+                      var person = Person();
+                      person.birthDay = _birthDay;
+                      person.docNumber = _documentNumber;
+                      person.gnere = _genre;
+                      person.name = _name;
+                      person.lastName = _lastName;
+                      person.portrait = _portraitBytes;
+                      Provider.of<PersonModel>(context, listen: false)
+                          .add(person);
+                      activeStep++;
+                    } else if (activeStep == 3 && isAnythingEmpty()) {
+                      print("Algunos de tus campos esta vacio");
+                    } else {
+                      activeStep++;
+                    }
+                  }
+                });
+              },
+              child: getButton())
+        ],
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +360,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             "lib/images/notifications_icon.svg",
             color: Colors.white,
           ),
-          Text("|"),
+          const Text("|"),
           const Text(
             "Bienvenido \n Stalin Rivas",
             style: TextStyle(color: Colors.white),
@@ -245,14 +370,14 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       ),
       body: Column(
         children: [
-          MyBackButton(
+          const MyBackButton(
             title: "Asistente de Registro",
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           NumberStepper(
-            numbers: [1, 2, 3, 4],
+            numbers: const [1, 2, 3, 4],
             enableNextPreviousButtons: false,
             enableStepTapping: false,
             activeStep: activeStep,
@@ -265,9 +390,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 420.0),
+              constraints:
+                  const BoxConstraints(maxHeight: 380.0, minHeight: 380),
               child: Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8.0),
@@ -275,59 +401,13 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                   child: getActiveStepWidget()),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          activeStep == 0 || activeStep == 4
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (activeStep == 4) {
-                        Navigator.pop(context);
-                      } else {
-                        if (activeStep == 0) liveness();
-                        print(activeStep);
-                        activeStep++;
-                      }
-                    });
-                  },
-                  child: getButton())
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            activeStep--;
-                          });
-                        },
-                        child: const MyButton(
-                          title: "Volver",
-                          isGrey: true,
-                        )),
-                    GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (activeStep == 4) {
-                              Navigator.pop(context);
-                              dispose();
-                            } else {
-                              if (activeStep == 1) {
-                                DocumentReader.showScanner();
-                              } else if (isAnythingEmpty()) {
-                                print("Algunos de tus campos esta vacio");
-                              } else {
-                                activeStep++;
-                              }
-                            }
-                          });
-                        },
-                        child: getButton())
-                  ],
-                )
+          getBottomButtons()
         ],
       ),
-      bottomNavigationBar: MyBottomBar(),
+      bottomNavigationBar: const MyBottomBar(),
     );
   }
 

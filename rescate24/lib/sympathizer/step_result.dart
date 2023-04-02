@@ -6,57 +6,75 @@ import 'package:rescate24/components/my_data_info.dart';
 
 class StepResult extends StatelessWidget {
   const StepResult(
-      {Key? key, required this.name, required this.last_name, this.doc_image})
+      {Key? key,
+      required this.name,
+      required this.last_name,
+      this.doc_image,
+      required this.docNumber,
+      required this.genre,
+      required this.birthDay})
       : super(key: key);
   final String name;
   final String last_name;
   final Uint8List? doc_image;
+  final String docNumber;
+  final String genre;
+  final String birthDay;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           "Informacion del simpatizante",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         Row(
           children: [
             doc_image != null
-                ? Image.memory(doc_image!)
-                : Image.asset("lib/images/portrait.png"),
+                ? Image.memory(
+                    doc_image!,
+                    width: 100,
+                    height: 100,
+                  )
+                : Image.asset(
+                    "lib/images/portrait.png",
+                    width: 100,
+                    height: 100,
+                  ),
             Column(
               children: [
-                MyDataInfo(title: "Cedula", description: "001-121232"),
+                MyDataInfo(title: "Cedula", description: docNumber),
                 MyDataInfo(title: "Nombre", description: name),
                 MyDataInfo(title: "Apellidos", description: last_name),
-                MyDataInfo(title: "Genero", description: "Masculino"),
-                MyDataInfo(title: "Nacimiento", description: "10/10/2010")
+                MyDataInfo(title: "Genero", description: genre),
+                MyDataInfo(title: "Nacimiento", description: birthDay)
               ],
             )
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        Text(
+        const Text(
           "Direccion",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        MyDataInfo(title: "Provincia", description: "Santo Domingo"),
-        MyDataInfo(title: "Municipio", description: "Distrito Nacional"),
-        MyDataInfo(title: "Direccion", description: "Las caobas"),
-        SizedBox(
+        const MyDataInfo(title: "Provincia", description: "Santo Domingo"),
+        const MyDataInfo(title: "Municipio", description: "Distrito Nacional"),
+        const MyDataInfo(title: "Direccion", description: "Las caobas"),
+        const SizedBox(
           height: 20,
         ),
-        Text(
+        const Text(
           "Lugar de Votacion",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        MyDataInfo(title: "Provincia", description: "Santo Domingo"),
-        MyDataInfo(title: "Municipio", description: "Distrito Nacional"),
-        MyDataInfo(title: "Recinto", description: "Las caobas"),
-        MyDataInfo(title: "Colegio", description: "Las caobas high school")
+        const MyDataInfo(title: "Provincia", description: "Santo Domingo"),
+        const MyDataInfo(title: "Municipio", description: "Distrito Nacional"),
+        const MyDataInfo(title: "Recinto", description: "Las caobas"),
+        const MyDataInfo(
+            title: "Colegio", description: "Las caobas high school")
       ],
     );
   }

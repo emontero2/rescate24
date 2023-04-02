@@ -54,9 +54,6 @@ class StepFinish extends StatelessWidget {
                 : "lib/images/x_mark_icon.svg",
             description:
                 "Prueba de vida y validacion final \n del simpatizante"),
-        const SizedBox(
-          height: 20,
-        ),
       ],
     );
   }

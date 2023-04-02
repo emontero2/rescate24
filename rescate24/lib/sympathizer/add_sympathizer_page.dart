@@ -33,13 +33,13 @@ class AddSympathizerPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          MyBackButton(
+          const MyBackButton(
             title: "Registro y Validacion de Militante y/o Simpatizante",
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Text(
+          const Text(
             "Localizador de Simpatizante Registrado",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
@@ -47,25 +47,25 @@ class AddSympathizerPage extends StatelessWidget {
               controller: cedulaController,
               hintText: "Ingrese el numero del localizador",
               obscureText: false),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          MyButton(title: "Buscar"),
-          SizedBox(
+          const MyButton(title: "Buscar"),
+          const SizedBox(
             height: 50,
           ),
-          Text(
+          const Text(
             "Inicia Asistente de registro \n de nuevo simpatizante",
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/register_assitant'),
-              child: MyIconButton(title: "Asistente de Registro")),
-          SizedBox(
+              child: const MyIconButton(title: "Asistente de Registro")),
+          const SizedBox(
             height: 50,
           ),
           Padding(

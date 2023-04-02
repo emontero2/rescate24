@@ -40,6 +40,7 @@ dependencies:
   flutter_face_core: 5.1.0
   flutter_document_reader_api: any
   flutter_document_reader_core_fullrfid: any
+  provider: ^6.0.0
 
 dev_dependencies:
   flutter_test:

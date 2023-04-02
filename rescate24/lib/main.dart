@@ -3,9 +3,13 @@ import 'package:rescate24/dashboard/Dashboard.dart';
 import 'package:rescate24/login/login.dart';
 import 'package:rescate24/sympathizer/add_sympathizer_page.dart';
 import 'package:rescate24/sympathizer/register_asistant.dart';
+import 'package:provider/provider.dart';
+
+import 'models/PersonModel.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => PersonModel(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

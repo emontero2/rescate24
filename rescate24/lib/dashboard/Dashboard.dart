@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:rescate24/components/my_bottom_bar.dart';
 import 'package:rescate24/components/my_icon_button.dart';
 import 'package:rescate24/components/my_top_bar.dart';
+import 'package:rescate24/components/person_card.dart';
+import 'package:rescate24/models/PersonModel.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -17,7 +20,7 @@ class Dashboard extends StatelessWidget {
             "lib/images/notifications_icon.svg",
             color: Colors.white,
           ),
-          Text("|"),
+          const Text("|"),
           const Text(
             "Bienvenido \n Stalin Rivas",
             style: TextStyle(color: Colors.white),
@@ -28,7 +31,7 @@ class Dashboard extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             const Text(
@@ -38,19 +41,19 @@ class Dashboard extends StatelessWidget {
                   color: Colors.black,
                   fontSize: 22),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/add_sympathizer'),
-                child: MyIconButton(title: "Agregar Simpatizante")),
-            SizedBox(
+                child: const MyIconButton(title: "Agregar Simpatizante")),
+            const SizedBox(
               height: 20,
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 25),
+              margin: const EdgeInsets.symmetric(horizontal: 25),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
                   color: Colors.white,
                   border: Border.all(color: Colors.grey.shade400)),
               child: Column(
@@ -60,21 +63,21 @@ class Dashboard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "0",
                           style: TextStyle(
                               color: Colors.green,
                               fontSize: 30,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text("Simpatizantes relacionados registrados")
+                        const Text("Simpatizantes relacionados registrados")
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                   ),
                   Padding(
@@ -82,22 +85,22 @@ class Dashboard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "0",
                           style: TextStyle(
                               color: Colors.orange,
                               fontSize: 30,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                             "Cantidad de simpatizantes regulares \n faltantes por registrar")
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                   ),
                   Padding(
@@ -105,17 +108,17 @@ class Dashboard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "0",
                           style: TextStyle(
                               color: Colors.purple,
                               fontSize: 30,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                             "Total de simpatizantes registrados en su \n estructura")
                       ],
                     ),
@@ -123,29 +126,41 @@ class Dashboard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                     color: Colors.white,
                     border: Border.all(color: Colors.grey.shade400)),
-                child: Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Text(
-                    "Simpatizantes",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
+                child: Column(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Text(
+                      "Simpatizantes",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Consumer<PersonModel>(
+                        builder: (context, personModel, child) =>
+                            personModel.person.isNotEmpty
+                                ? Stack(
+                                    children: personModel.person
+                                        .map((e) => PersonCard(person: e))
+                                        .toList(),
+                                  )
+                                : const Text(
+                                    "No hay personas afiliadas actualmente"))
+                  ],
                 ))
           ],
         ),
       ),
-      bottomNavigationBar: MyBottomBar(),
+      bottomNavigationBar: const MyBottomBar(),
     );
   }
 }
