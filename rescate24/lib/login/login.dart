@@ -41,7 +41,7 @@ class LoginPage extends StatelessWidget {
               ),
               GestureDetector(
                   onTap: () => Navigator.pushNamed(context, '/dashboard'),
-                  child: MyButton(
+                  child: const MyButton(
                     title: 'Entrar',
                   )),
               const SizedBox(
@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
               const SocialButton(
                 title: "Inicia sesion con Facebook",
                 icon: "lib/images/facebook_icon.png",
-                buttonColor: Colors.blue,
+                buttonColor: Color(0xFF0077F3),
               ),
               const SizedBox(
                 height: 10,
@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
               const SocialButton(
                 title: "Inicia sesion con Google",
                 icon: "lib/images/google_icon.png",
-                buttonColor: Colors.blue,
+                buttonColor: Color(0xFF0085FF),
               ),
               const SizedBox(
                 height: 20,

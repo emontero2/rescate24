@@ -30,12 +30,15 @@ class MyTextField extends StatelessWidget {
             hintText: hintText,
             prefixIcon: startIcon == null
                 ? null
-                : SvgPicture.asset(
-                    startIcon ?? "",
-                    width: 10.0,
-                    height: 10.0,
-                    color: Colors.grey,
-                  )),
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SvgPicture.asset(
+                      startIcon ?? "",
+                      color: Colors.grey,
+                    ),
+                  ),
+            prefixIconConstraints:
+                const BoxConstraints(minHeight: 30.0, maxHeight: 30.0)),
       ),
     );
   }

@@ -16,19 +16,35 @@ class AddSympathizerPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        leading: SvgPicture.asset("lib/images/R24logo1.svg"),
-        backgroundColor: Colors.purple,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: SvgPicture.asset("lib/images/R24logo1.svg"),
+        ),
+        backgroundColor: const Color(0xFF560265),
         actions: [
           SvgPicture.asset(
             "lib/images/notifications_icon.svg",
             color: Colors.white,
           ),
-          Text("|"),
-          const Text(
-            "Bienvenido \n Stalin Rivas",
-            style: TextStyle(color: Colors.white),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            child: VerticalDivider(
+              color: Colors.white,
+              thickness: 2,
+            ),
           ),
-          SvgPicture.asset("lib/images/user_icon.svg")
+          const Center(
+            child: Text(
+              "Bienvenid@ \nDiana Rivas",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          const CircleAvatar(
+            backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
+          )
         ],
       ),
       body: Column(

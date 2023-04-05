@@ -7,25 +7,48 @@ import 'package:rescate24/components/my_top_bar.dart';
 import 'package:rescate24/components/person_card.dart';
 import 'package:rescate24/models/PersonModel.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+int quantityOfAffiliates = 0;
+
+class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        leading: SvgPicture.asset("lib/images/R24logo1.svg"),
-        backgroundColor: Colors.purple,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: SvgPicture.asset("lib/images/R24logo1.svg"),
+        ),
+        backgroundColor: const Color(0xFF560265),
         actions: [
           SvgPicture.asset(
             "lib/images/notifications_icon.svg",
             color: Colors.white,
           ),
-          const Text("|"),
-          const Text(
-            "Bienvenido \n Stalin Rivas",
-            style: TextStyle(color: Colors.white),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+            child: VerticalDivider(
+              color: Colors.white,
+              thickness: 2,
+            ),
           ),
-          SvgPicture.asset("lib/images/user_icon.svg")
+          const Center(
+            child: Text(
+              "Bienvenid@ \nDiana Rivas",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          const CircleAvatar(
+            backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
+          )
         ],
       ),
       body: Center(
@@ -60,21 +83,24 @@ class Dashboard extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "0",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text("Simpatizantes relacionados registrados")
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            quantityOfAffiliates.toString(),
+                            style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text("Simpatizantes relacionados registrados")
+                        ],
+                      ),
                     ),
                   ),
                   const Divider(
@@ -82,22 +108,25 @@ class Dashboard extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "0",
-                          style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text(
-                            "Cantidad de simpatizantes regulares \n faltantes por registrar")
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "0",
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                              "Cantidad de simpatizantes regulares \nfaltantes por registrar")
+                        ],
+                      ),
                     ),
                   ),
                   const Divider(
@@ -105,22 +134,25 @@ class Dashboard extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "0",
-                          style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text(
-                            "Total de simpatizantes registrados en su \n estructura")
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "0",
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                              "Total de simpatizantes registrados en su \nestructura")
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -129,34 +161,45 @@ class Dashboard extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Container(
-                margin: const EdgeInsets.symmetric(horizontal: 25),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey.shade400)),
-                child: Column(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const Text(
-                      "Simpatizantes",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Consumer<PersonModel>(
-                        builder: (context, personModel, child) =>
-                            personModel.person.isNotEmpty
-                                ? Stack(
-                                    children: personModel.person
-                                        .map((e) => PersonCard(person: e))
-                                        .toList(),
-                                  )
-                                : const Text(
-                                    "No hay personas afiliadas actualmente"))
-                  ],
-                ))
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 200, minWidth: 400),
+              child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade400)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Text(
+                        "Simpatizantes",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Consumer<PersonModel>(
+                          builder: (context, personModel, child) {
+                        if (personModel.person.isNotEmpty) {
+                          setState(() {
+                            quantityOfAffiliates = personModel.person.length;
+                          });
+                          return Stack(
+                            children: personModel.person
+                                .map((e) => PersonCard(person: e))
+                                .toList(),
+                          );
+                        } else {
+                          return const Text(
+                              "No hay personas afiliadas actualmente");
+                        }
+                      })
+                    ],
+                  )),
+            )
           ],
         ),
       ),
