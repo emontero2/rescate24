@@ -21,12 +21,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginPage(),
         '/dashboard': (context) => Dashboard(),
         '/add_sympathizer': (context) => AddSympathizerPage(),
-        '/register_assitant': (context) => RegisterAsistant()
+        '/register_assitant': (context) => const RegisterAsistant()
       },
     );
   }
