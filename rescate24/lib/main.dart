@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/dashboard': (context) => Dashboard(),
         '/add_sympathizer': (context) => AddSympathizerPage(),
-        '/register_assitant': (context) => RegisterAsistant()
+        '/register_assitant': (context) => const RegisterAsistant()
       },
     );
   }

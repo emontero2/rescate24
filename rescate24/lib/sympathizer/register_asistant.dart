@@ -39,6 +39,7 @@ final emailController = TextEditingController();
 int activeStep = 0;
 
 String _liveness = "nil";
+String _similarity = "nil";
 String _name = "";
 String _genre = "";
 String _birthDay = "";
@@ -49,6 +50,10 @@ List<List<String>> _scenarios = [];
 String _selectedScenario = "FullProcess";
 Uint8List? _portraitBytes = null;
 Uint8List? _docImageBytes = null;
+var image1 = new Regula.MatchFacesImage();
+var image2 = new Regula.MatchFacesImage();
+var img1 = null;
+var img2 = null;
 
 Widget getActiveStepWidget() {
   if (activeStep == 0) {
@@ -159,6 +164,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       _portrait = Image.asset('assets/images/portrait.png');
       if (doc != null) {
         _docImage = Image.memory(doc.data!.contentAsBytes());
+        setImage(false, doc.data!.contentAsBytes(), Regula.ImageType.PRINTED);
         setState(() {
           _docImageBytes = doc.data!.contentAsBytes();
         });
@@ -218,20 +224,43 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     });
   }
 
+  matchFaces() {
+    if (image1.bitmap == null ||
+        image1.bitmap == "" ||
+        image2.bitmap == null ||
+        image2.bitmap == "") return;
+    setState(() => _similarity = "Processing...");
+    var request = new Regula.MatchFacesRequest();
+    request.images = [image1, image2];
+    Regula.FaceSDK.matchFaces(jsonEncode(request)).then((value) {
+      var response = Regula.MatchFacesResponse.fromJson(json.decode(value));
+      Regula.FaceSDK.matchFacesSimilarityThresholdSplit(
+              jsonEncode(response!.results), 0.75)
+          .then((str) {
+        var split = Regula.MatchFacesSimilarityThresholdSplit.fromJson(
+            json.decode(str));
+        setState(() => _similarity = split!.matchedFaces.length > 0
+            ? ((split.matchedFaces[0]!.similarity! * 100).toStringAsFixed(2) +
+                "%")
+            : "error");
+      });
+    });
+  }
+
   setImage(bool first, Uint8List? imageFile, int type) {
     if (imageFile == null) return;
     // setState(() => _similarity = "nil");
     if (first) {
-      //image1.bitmap = base64Encode(imageFile);
-      //image1.imageType = type;
+      image1.bitmap = base64Encode(imageFile);
+      image1.imageType = type;
       setState(() {
-        //img1 = Image.memory(imageFile);
+        img1 = Image.memory(imageFile);
         _liveness = "nil";
       });
     } else {
-      //image2.bitmap = base64Encode(imageFile);
-      //image2.imageType = type;
-      //setState(() => img2 = Image.memory(imageFile));
+      image2.bitmap = base64Encode(imageFile);
+      image2.imageType = type;
+      setState(() => img2 = Image.memory(imageFile));
     }
   }
 
@@ -395,16 +424,68 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           const SizedBox(
             height: 20,
           ),
-          NumberStepper(
-            numbers: const [1, 2, 3, 4],
-            enableNextPreviousButtons: false,
-            enableStepTapping: false,
+          Container(
+            alignment: Alignment.topLeft,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "Pasos",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ),
+          DotStepper(
+            shape: Shape.pipe,
+            dotCount: 4,
+            spacing: 60,
+            tappingEnabled: false,
+            indicatorDecoration: const IndicatorDecoration(color: Colors.green),
             activeStep: activeStep,
-            onStepReached: (index) {
-              setState(() {
-                activeStep = index;
-              });
-            },
+            onDotTapped: (tappedDotIndex) => activeStep = tappedDotIndex,
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _liveness == "nil"
+                    ? Text(
+                        "1",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      )
+                    : SvgPicture.asset(
+                        _liveness == "passed"
+                            ? "lib/images/check_icon.svg"
+                            : "lib/images/x_mark_icon.svg",
+                        width: 20,
+                        height: 20,
+                        color:
+                            _liveness == "passed" ? Colors.green : Colors.red,
+                      ),
+                _name.isEmpty
+                    ? Text("2",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold))
+                    : SvgPicture.asset(
+                        "lib/images/check_icon.svg",
+                        width: 20,
+                        height: 20,
+                        color: Colors.green,
+                      ),
+                isAnythingEmpty()
+                    ? Text("3",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold))
+                    : SvgPicture.asset(
+                        "lib/images/check_icon.svg",
+                        width: 20,
+                        height: 20,
+                        color: Colors.green,
+                      ),
+                Text("4",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold))
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),

@@ -12,30 +12,30 @@ class MyBottomBar extends StatelessWidget {
         BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "lib/images/home_icon.svg",
-              color: Colors.purple,
+              color: Color(0xFF5F0069),
             ),
             label: "Inicio"),
         BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "lib/images/calendar_icon.svg",
-              color: Colors.purple,
+              color: Color(0xFF5F0069),
             ),
             label: "Actividades"),
         BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "lib/images/news_icon.svg",
-              color: Colors.purple,
+              color: Color(0xFF5F0069),
             ),
             label: "Noticias"),
         BottomNavigationBarItem(
             icon: SvgPicture.asset(
               "lib/images/group_icon.svg",
-              color: Colors.purple,
+              color: Color(0xFF5F0069),
             ),
             label: "Dirigentes")
       ],
-      unselectedItemColor: Colors.purple,
-      selectedItemColor: Colors.purple,
+      unselectedItemColor: Color(0xFF5F0069),
+      selectedItemColor: Color(0xFF5F0069),
       showUnselectedLabels: true,
     );
   }
