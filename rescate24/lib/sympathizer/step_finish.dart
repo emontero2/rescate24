@@ -29,7 +29,7 @@ class StepFinish extends StatelessWidget {
                 ? "lib/images/check_icon.svg"
                 : "lib/images/x_mark_icon.svg",
             description:
-                "Captura Frontal de documento \n de identidad y extraccion de datos"),
+                "Captura Frontal de documento \nde identidad y extraccion de datos"),
         const SizedBox(
           height: 20,
         ),
@@ -38,13 +38,13 @@ class StepFinish extends StatelessWidget {
                 ? "lib/images/check_icon.svg"
                 : "lib/images/x_mark_icon.svg",
             description:
-                "Captura de parte trasera de Documento \n de identidad y extraccion de datos"),
+                "Captura de parte trasera de Documento \nde identidad y extraccion de datos"),
         const SizedBox(
           height: 20,
         ),
         const CheckMarkText(
             icon: "lib/images/check_icon.svg",
-            description: "Captura de datos complementario \n y de contacto"),
+            description: "Captura de datos complementario \ny de contacto"),
         const SizedBox(
           height: 20,
         ),
@@ -53,7 +53,7 @@ class StepFinish extends StatelessWidget {
                 ? "lib/images/check_icon.svg"
                 : "lib/images/x_mark_icon.svg",
             description:
-                "Prueba de vida y validacion final \n del simpatizante"),
+                "Prueba de vida y validacion final \ndel simpatizante"),
       ],
     );
   }

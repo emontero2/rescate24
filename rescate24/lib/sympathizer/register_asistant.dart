@@ -40,14 +40,13 @@ int activeStep = 0;
 
 String _liveness = "nil";
 String _name = "";
-String _lastName = "";
 String _genre = "";
 String _birthDay = "";
 String _documentNumber = "";
 Image _portrait = Image.asset("lib/images/portrait.png");
 Image _docImage = Image.asset("lib/images/id.png");
 List<List<String>> _scenarios = [];
-String _selectedScenario = "Ocr";
+String _selectedScenario = "FullProcess";
 Uint8List? _portraitBytes = null;
 Uint8List? _docImageBytes = null;
 
@@ -59,7 +58,6 @@ Widget getActiveStepWidget() {
   } else if (activeStep == 2) {
     return StepResult(
       name: _name,
-      last_name: _lastName,
       doc_image: _portraitBytes,
       docNumber: _documentNumber,
       birthDay: _birthDay,
@@ -135,10 +133,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   }
 
   displayResults(DocumentReaderResults results) async {
-    var name =
-        await results.textFieldValueByType(EVisualFieldType.FT_FIRST_NAME);
-    var lastName =
-        await results.textFieldValueByType(EVisualFieldType.FT_LAST_NAME);
+    var name = await results
+        .textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
     var genre = await results.textFieldValueByType(EVisualFieldType.FT_SEX);
     var documentNumber =
         await results.textFieldValueByType(EVisualFieldType.FT_DOCUMENT_NUMBER);
@@ -148,10 +144,14 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         .graphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
     var portrait =
         await results.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
-    print("name: $name");
+    for (var textField in results.textResult?.fields ?? []) {
+      for (var value in textField?.values) {
+        print(
+            '${textField.fieldName}, value: ${value?.value}, source: ${value?.sourceType}');
+      }
+    }
     setState(() {
-      _name = name ?? "No encontrado";
-      _lastName = lastName ?? "No encontrado";
+      _name = name?.split(" ")[0] ?? "No encontrado";
       _documentNumber = documentNumber ?? "No encontrado";
       _birthDay = birthDay ?? "No encontrado";
       _genre = genre ?? "No encontrado";
@@ -251,7 +251,12 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             result.liveness == Regula.LivenessStatus.PASSED
                 ? "passed"
                 : "unknown");
-        activeStep++;
+        if (result.exception == null ||
+            result.exception?.errorCode == Regula.LivenessErrorCode.CANCELLED) {
+          activeStep++;
+        } else {
+          liveness();
+        }
       });
 
   Widget getBottomButtons() {
@@ -265,7 +270,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 if (activeStep == 0) {
                   liveness();
                 } else {
-                  print(activeStep);
                   activeStep++;
                 }
               }
@@ -292,7 +296,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                     if (activeStep == 0) {
                       liveness();
                     } else {
-                      print(activeStep);
                       activeStep++;
                     }
                   }
@@ -330,7 +333,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                       person.docNumber = _documentNumber;
                       person.gnere = _genre;
                       person.name = _name;
-                      person.lastName = _lastName;
                       person.portrait = _portraitBytes;
                       Provider.of<PersonModel>(context, listen: false)
                           .add(person);
@@ -419,7 +421,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 5,
           ),
           getBottomButtons()
         ],

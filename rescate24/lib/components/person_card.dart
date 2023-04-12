@@ -28,11 +28,10 @@ class PersonCard extends StatelessWidget {
                   ),
             Column(
               children: [
-                MyDataInfo(title: "Cedula", description: person.docNumber),
-                MyDataInfo(title: "Nombre", description: person.name),
-                MyDataInfo(title: "Apellidos", description: person.lastName),
-                MyDataInfo(title: "Genero", description: person.gnere),
-                MyDataInfo(title: "Nacimiento", description: person.birthDay)
+                MyDataInfo(title: "Cedula: ", description: person.docNumber),
+                MyDataInfo(title: "Nombre:", description: person.name),
+                MyDataInfo(title: "Genero:", description: person.gnere),
+                MyDataInfo(title: "Nacimiento: ", description: person.birthDay)
               ],
             )
           ],

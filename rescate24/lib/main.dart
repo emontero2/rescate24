@@ -21,6 +21,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
+      showSemanticsDebugger: false,
+      showPerformanceOverlay: false,
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginPage(),
