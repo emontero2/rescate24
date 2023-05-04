@@ -54,6 +54,7 @@ var image1 = new Regula.MatchFacesImage();
 var image2 = new Regula.MatchFacesImage();
 var img1 = null;
 var img2 = null;
+bool isFinish = false;
 
 Widget getActiveStepWidget() {
   if (activeStep == 0) {
@@ -68,7 +69,7 @@ Widget getActiveStepWidget() {
       birthDay: _birthDay,
       genre: _genre,
     );
-  } else if (activeStep == 3) {
+  } else if (activeStep == 3 && !isFinish) {
     return Step3(
       MunicipeController: MunicipeController,
       provinceController: provinceController,
@@ -77,11 +78,13 @@ Widget getActiveStepWidget() {
       phoneNumberResidenceController: phoneNumberResidenceController,
       emailController: emailController,
     );
-  } else {
+  } else if (activeStep == 3 && isFinish) {
     return StepFinish(
-      isLivenessOk: _liveness == "passed",
+      isLivenessOk: _liveness == "passed" && _similarity != "error",
       isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
     );
+  } else {
+    return Container();
   }
 }
 
@@ -244,6 +247,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 "%")
             : "error");
       });
+      print("similarity: " + _similarity);
     });
   }
 
@@ -265,7 +269,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   }
 
   Widget getButton() {
-    if (activeStep == 4) {
+    if (activeStep == 3 && isFinish) {
       return const MyButton(title: "Finalizar");
     } else {
       return const MyButton(title: "Continuar");
@@ -293,7 +297,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       return GestureDetector(
           onTap: () {
             setState(() {
-              if (activeStep == 4) {
+              if (activeStep == 3 && isFinish) {
                 Navigator.pop(context);
               } else {
                 if (activeStep == 0) {
@@ -305,12 +309,12 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             });
           },
           child: getButton());
-    } else if (activeStep == 4) {
+    } else if (activeStep == 3 && isFinish) {
       return Column(
         children: [
           GestureDetector(
               onTap: () {
-                dispose();
+                Navigator.popAndPushNamed(context, '/register_assitant');
               },
               child: const MyIconButton(title: "Asistente de Registro")),
           const SizedBox(
@@ -319,7 +323,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  if (activeStep == 4) {
+                  if (activeStep == 3 && isFinish) {
                     Navigator.pop(context);
                   } else {
                     if (activeStep == 0) {
@@ -369,7 +373,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                     } else if (activeStep == 3 && isAnythingEmpty()) {
                       print("Algunos de tus campos esta vacio");
                     } else {
-                      activeStep++;
+                      isFinish = true;
                     }
                   }
                 });
@@ -471,7 +475,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                         height: 20,
                         color: Colors.green,
                       ),
-                isAnythingEmpty()
+                _name.isEmpty
                     ? Text("3",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold))
@@ -481,14 +485,22 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                         height: 20,
                         color: Colors.green,
                       ),
-                Text("4",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold))
+                isAnythingEmpty()
+                    ? Text("4",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold))
+                    : SvgPicture.asset(
+                        "lib/images/check_icon.svg",
+                        width: 20,
+                        height: 20,
+                        color: Colors.green,
+                      ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: ConstrainedBox(
               constraints:
                   const BoxConstraints(maxHeight: 380.0, minHeight: 380),
@@ -511,9 +523,21 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     );
   }
 
+  clearResults() {
+    img1 = null;
+    img2 = null;
+    _similarity = "nil";
+    _liveness = "nil";
+    _name = "";
+    isFinish = false;
+    activeStep = 0;
+    image1 = new Regula.MatchFacesImage();
+    image2 = new Regula.MatchFacesImage();
+  }
+
   @override
   void dispose() {
     super.dispose();
-    activeStep = 0;
+    clearResults();
   }
 }
