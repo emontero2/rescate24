@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
+      showSemanticsDebugger: false,
+      showPerformanceOverlay: false,
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginPage(),

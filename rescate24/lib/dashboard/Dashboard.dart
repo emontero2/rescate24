@@ -12,11 +12,10 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-int quantityOfAffiliates = 0;
-
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+    int quantityOfAffiliates = context.read<PersonModel>().person.length;
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -162,7 +161,7 @@ class _DashboardState extends State<Dashboard> {
               height: 20,
             ),
             ConstrainedBox(
-              constraints: BoxConstraints(minHeight: 200, minWidth: 400),
+              constraints: const BoxConstraints(minHeight: 200, minWidth: 400),
               child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 25),
                   padding: const EdgeInsets.all(20.0),
@@ -184,13 +183,14 @@ class _DashboardState extends State<Dashboard> {
                       Consumer<PersonModel>(
                           builder: (context, personModel, child) {
                         if (personModel.person.isNotEmpty) {
-                          setState(() {
-                            quantityOfAffiliates = personModel.person.length;
-                          });
-                          return Stack(
-                            children: personModel.person
-                                .map((e) => PersonCard(person: e))
-                                .toList(),
+                          return SizedBox(
+                            height: 200,
+                            child: ListView.separated(
+                                itemCount: personModel.person.length,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(),
+                                itemBuilder: (context, int index) => PersonCard(
+                                    person: personModel.person[index])),
                           );
                         } else {
                           return const Text(

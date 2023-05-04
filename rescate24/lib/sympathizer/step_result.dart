@@ -8,14 +8,12 @@ class StepResult extends StatelessWidget {
   const StepResult(
       {Key? key,
       required this.name,
-      required this.last_name,
       this.doc_image,
       required this.docNumber,
       required this.genre,
       required this.birthDay})
       : super(key: key);
   final String name;
-  final String last_name;
   final Uint8List? doc_image;
   final String docNumber;
   final String genre;
@@ -44,11 +42,10 @@ class StepResult extends StatelessWidget {
                   ),
             Column(
               children: [
-                MyDataInfo(title: "Cedula", description: docNumber),
-                MyDataInfo(title: "Nombre", description: name),
-                MyDataInfo(title: "Apellidos", description: last_name),
-                MyDataInfo(title: "Genero", description: genre),
-                MyDataInfo(title: "Nacimiento", description: birthDay)
+                MyDataInfo(title: "Cedula: ", description: docNumber),
+                MyDataInfo(title: "Nombre: ", description: name),
+                MyDataInfo(title: "Genero: ", description: genre),
+                MyDataInfo(title: "Nacimiento: ", description: birthDay)
               ],
             )
           ],
