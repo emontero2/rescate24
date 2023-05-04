@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,7 +101,13 @@ bool isAnythingEmpty() {
   }
 }
 
+Color getActiveColor(int active) {
+  return activeStep == active ? Colors.green : Colors.grey;
+}
+
 class _RegisterAsistantState extends State<RegisterAsistant> {
+  var stepperData = [];
+
   @override
   void initState() {
     super.initState();
@@ -129,6 +136,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         completion.action == DocReaderAction.TIMEOUT) {
       if (completion.results != null) {
         activeStep++;
+        print(activeStep);
         displayResults(completion.results!);
         print(completion.results);
       } else {
@@ -217,8 +225,27 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         "showCaptureButton": true
       },
       "customization": {
-        "showResultStatusMessages": true,
-        "showStatusMessages": true
+        "showResultStatusMessages": false,
+        "showStatusMessages": false,
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.5,
+        "showNextPageAnimation": true,
+        "uiCustomizationLayer": {
+          "objects": [
+            {
+              "label": {
+                "text":
+                    "Mantenga el dispositivo con el menor movimiento posible",
+                "position": {"h": 1.0, "v": 0.5},
+                "background": "#00FFFFFF",
+                "fontColor": "#000000",
+                "fontSize": 18,
+                "fontStyle": "bold",
+                "alignment": "center"
+              }
+            }
+          ]
+        }
       },
       "processParams": {"scenario": _selectedScenario}
     });
@@ -230,7 +257,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         image2.bitmap == null ||
         image2.bitmap == "") return;
     setState(() => _similarity = "Processing...");
-    var request = new Regula.MatchFacesRequest();
+    var request = Regula.MatchFacesRequest();
     request.images = [image1, image2];
     Regula.FaceSDK.matchFaces(jsonEncode(request)).then((value) {
       var response = Regula.MatchFacesResponse.fromJson(json.decode(value));
@@ -281,6 +308,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 ? "passed"
                 : "unknown");
         activeStep++;
+        print(activeStep);
       });
 
   Widget getBottomButtons() {
@@ -294,8 +322,9 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 if (activeStep == 0) {
                   liveness();
                 } else {
-                  print(activeStep);
-                  activeStep++;
+                  setState(() {
+                    activeStep++;
+                  });
                 }
               }
             });
@@ -322,7 +351,9 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                       liveness();
                     } else {
                       print(activeStep);
-                      activeStep++;
+                      setState(() {
+                        activeStep++;
+                      });
                     }
                   }
                 });
@@ -431,57 +462,94 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             ),
           ),
-          DotStepper(
-            shape: Shape.pipe,
-            dotCount: 4,
-            spacing: 60,
-            tappingEnabled: false,
-            indicatorDecoration: const IndicatorDecoration(color: Colors.green),
-            activeStep: activeStep,
-            onDotTapped: (tappedDotIndex) => activeStep = tappedDotIndex,
-          ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
               children: [
-                _liveness == "nil"
-                    ? Text(
-                        "1",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                      )
-                    : SvgPicture.asset(
-                        _liveness == "passed"
-                            ? "lib/images/check_icon.svg"
-                            : "lib/images/x_mark_icon.svg",
-                        width: 20,
-                        height: 20,
-                        color:
-                            _liveness == "passed" ? Colors.green : Colors.red,
-                      ),
-                _name.isEmpty
-                    ? Text("2",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold))
-                    : SvgPicture.asset(
-                        "lib/images/check_icon.svg",
-                        width: 20,
-                        height: 20,
-                        color: Colors.green,
-                      ),
-                isAnythingEmpty()
-                    ? Text("3",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold))
-                    : SvgPicture.asset(
-                        "lib/images/check_icon.svg",
-                        width: 20,
-                        height: 20,
-                        color: Colors.green,
-                      ),
-                Text("4",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold))
+                AnotherStepper(
+                  stepperList: [
+                    StepperData(
+                        iconWidget: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: getActiveColor(0)),
+                    )),
+                    StepperData(
+                        iconWidget: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: getActiveColor(1)),
+                    )),
+                    StepperData(
+                        iconWidget: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: getActiveColor(2)),
+                    )),
+                    StepperData(
+                        iconWidget: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: getActiveColor(3)),
+                    ))
+                  ],
+                  stepperDirection: Axis.horizontal,
+                  iconWidth: 80,
+                  iconHeight: 10,
+                  barThickness: 0,
+                  activeIndex: activeStep,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(""),
+                      _liveness == "nil"
+                          ? Text(
+                              "1",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : SvgPicture.asset(
+                              _liveness == "passed"
+                                  ? "lib/images/check_icon.svg"
+                                  : "lib/images/x_mark_icon.svg",
+                              width: 20,
+                              height: 20,
+                              color: _liveness == "passed"
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                      Text(""),
+                      _name.isEmpty
+                          ? Text("2",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold))
+                          : SvgPicture.asset(
+                              "lib/images/check_icon.svg",
+                              width: 20,
+                              height: 20,
+                              color: Colors.green,
+                            ),
+                      Text(""),
+                      isAnythingEmpty()
+                          ? Text("3",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold))
+                          : SvgPicture.asset(
+                              "lib/images/check_icon.svg",
+                              width: 20,
+                              height: 20,
+                              color: Colors.green,
+                            ),
+                      Text(""),
+                      Text("4",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -513,5 +581,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   void dispose() {
     super.dispose();
     activeStep = 0;
+    _liveness = "nil";
   }
 }
