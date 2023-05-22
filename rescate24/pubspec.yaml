@@ -41,6 +41,7 @@ dependencies:
   flutter_document_reader_api: any
   flutter_document_reader_core_fullrfid: any
   provider: ^6.0.0
+  another_stepper: ^1.2.2
 
 dev_dependencies:
   flutter_test:
