@@ -59,18 +59,8 @@ bool isFinish = false;
 
 Widget getActiveStepWidget() {
   if (activeStep == 0) {
-    return const Step1();
-  } else if (activeStep == 1) {
     return const Step2();
-  } else if (activeStep == 2) {
-    return StepResult(
-      name: _name,
-      doc_image: _portraitBytes,
-      docNumber: _documentNumber,
-      birthDay: _birthDay,
-      genre: _genre,
-    );
-  } else if (activeStep == 3 && !isFinish) {
+  } else if (activeStep == 1) {
     return Step3(
       MunicipeController: MunicipeController,
       provinceController: provinceController,
@@ -79,11 +69,24 @@ Widget getActiveStepWidget() {
       phoneNumberResidenceController: phoneNumberResidenceController,
       emailController: emailController,
     );
-  } else if (activeStep == 3 && isFinish) {
+  } else if (activeStep == 2) {
+    return StepResult(
+      name: _name,
+      doc_image: _portraitBytes,
+      docNumber: _documentNumber,
+      birthDay: _birthDay,
+      genre: _genre,
+      province: provinceController.text,
+      sector: sectorController.text,
+      municipality: MunicipeController.text,
+    );
+  } else if (activeStep == 3) {
     return StepFinish(
       isLivenessOk: _liveness == "passed" && _similarity != "error",
       isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
     );
+  } else if (activeStep == 3 && isFinish) {
+    return Container();
   } else {
     return Container();
   }
@@ -160,12 +163,23 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         .graphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
     var portrait =
         await results.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+    var province =
+        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STATE);
+    var municipe = await results
+        .textFieldValueByType(EVisualFieldType.FT_ADDRESS_MUNICIPALITY);
+    var sector =
+        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STATE);
+
     for (var textField in results.textResult?.fields ?? []) {
       for (var value in textField?.values) {
         print(
             '${textField.fieldName}, value: ${value?.value}, source: ${value?.sourceType}');
       }
     }
+    MunicipeController.text = municipe ?? "";
+    provinceController.text = province ?? "";
+    sectorController.text = sector ?? "";
+
     setState(() {
       _name = name?.split(" ")[0] ?? "No encontrado";
       _documentNumber = documentNumber ?? "No encontrado";
@@ -223,10 +237,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     setState(() => _scenarios = scenarios);
 
     DocumentReader.setConfig({
-      "functionality": {
-        "videoCaptureMotionControl": true,
-        "showCaptureButton": true
-      },
+      "functionality": {"videoCaptureMotionControl": true},
       "customization": {
         "showResultStatusMessages": false,
         "showStatusMessages": false,
@@ -250,7 +261,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           ]
         }
       },
-      "processParams": {"scenario": _selectedScenario}
+      "processParams": {
+        "scenario": _selectedScenario,
+        "multipageProcessing": true
+      }
     });
   }
 
@@ -329,7 +343,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 Navigator.pop(context);
               } else {
                 if (activeStep == 0) {
-                  liveness();
+                  DocumentReader.showScanner();
                 } else {
                   setState(() {
                     activeStep++;
@@ -339,7 +353,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             });
           },
           child: getButton());
-    } else if (activeStep == 3 && isFinish) {
+    } else if (activeStep == 4) {
       return Column(
         children: [
           GestureDetector(
@@ -353,13 +367,25 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  if (activeStep == 3 && isFinish) {
+                  if (activeStep == 4) {
+                    var person = Person();
+                    person.birthDay = _birthDay;
+                    person.docNumber = _documentNumber;
+                    person.gnere = _genre;
+                    person.name = _name;
+                    person.portrait = _portraitBytes;
+                    person.municipe = MunicipeController.text;
+                    person.province = provinceController.text;
+                    person.phoneNumber = phoneNumberController.text;
+                    person.email = emailController.text;
+                    Provider.of<PersonModel>(context, listen: false)
+                        .add(person);
                     Navigator.pop(context);
+                    dispose();
                   } else {
                     if (activeStep == 0) {
-                      liveness();
+                      DocumentReader.showScanner();
                     } else {
-                      print(activeStep);
                       activeStep++;
                     }
                   }
@@ -385,27 +411,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  if (activeStep == 4) {
-                    Navigator.pop(context);
-                    dispose();
-                  } else {
-                    if (activeStep == 1) {
-                      DocumentReader.showScanner();
-                    } else if (activeStep == 2) {
-                      var person = Person();
-                      person.birthDay = _birthDay;
-                      person.docNumber = _documentNumber;
-                      person.gnere = _genre;
-                      person.name = _name;
-                      person.portrait = _portraitBytes;
-                      Provider.of<PersonModel>(context, listen: false)
-                          .add(person);
-                      activeStep++;
-                    } else if (activeStep == 3 && isAnythingEmpty()) {
-                      print("Algunos de tus campos esta vacio");
-                    } else {
-                      isFinish = true;
-                    }
+                  if (activeStep == 1 && !isAnythingEmpty() ||
+                      activeStep == 2 ||
+                      activeStep == 3) {
+                    activeStep++;
                   }
                 });
               },
@@ -462,7 +471,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           Container(
             alignment: Alignment.topLeft,
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
+            child: const Text(
               "Pasos",
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
@@ -584,21 +593,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     );
   }
 
-  clearResults() {
-    img1 = null;
-    img2 = null;
-    _similarity = "nil";
-    _liveness = "nil";
-    _name = "";
-    isFinish = false;
-    activeStep = 0;
-    image1 = new Regula.MatchFacesImage();
-    image2 = new Regula.MatchFacesImage();
-  }
-
   @override
   void dispose() {
     super.dispose();
-    clearResults();
   }
 }
