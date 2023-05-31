@@ -40,7 +40,7 @@ class LoginPage extends StatelessWidget {
                 height: 20,
               ),
               GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/dashboard'),
+                  onTap: () => Navigator.pushNamed(context, '/home'),
                   child: const MyButton(
                     title: 'Entrar',
                   )),

@@ -2,8 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class MyBottomBar extends StatelessWidget {
+class MyBottomBar extends StatefulWidget {
   const MyBottomBar({Key? key}) : super(key: key);
+
+  @override
+  State<MyBottomBar> createState() => _MyBottomBarState();
+}
+
+class _MyBottomBarState extends State<MyBottomBar> {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +49,7 @@ class MyBottomBar extends StatelessWidget {
       unselectedItemColor: Color(0xFF5F0069),
       selectedItemColor: Color(0xFF5F0069),
       showUnselectedLabels: true,
+      onTap: _onItemTapped,
     );
   }
 }

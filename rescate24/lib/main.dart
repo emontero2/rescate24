@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rescate24/dashboard/Dashboard.dart';
+import 'package:rescate24/home/home.dart';
 import 'package:rescate24/login/login.dart';
+import 'package:rescate24/news/news_screen.dart';
 import 'package:rescate24/sympathizer/add_sympathizer_page.dart';
 import 'package:rescate24/sympathizer/register_asistant.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +29,12 @@ class MyApp extends StatelessWidget {
       showPerformanceOverlay: false,
       initialRoute: '/login',
       routes: {
+        '/home': (context) => Home(),
         '/login': (context) => LoginPage(),
         '/dashboard': (context) => Dashboard(),
         '/add_sympathizer': (context) => AddSympathizerPage(),
-        '/register_assitant': (context) => const RegisterAsistant()
+        '/register_assitant': (context) => const RegisterAsistant(),
+        '/news_screen': (context) => const NewsScreen()
       },
     );
   }

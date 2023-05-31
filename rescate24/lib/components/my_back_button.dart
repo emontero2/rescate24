@@ -11,19 +11,21 @@ class MyBackButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.pop(context),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey, width: 2))),
+            border: Border(
+                bottom: BorderSide(color: Colors.grey.shade300, width: 2))),
         child: Row(
           children: [
             SvgPicture.asset("lib/images/left_icon.svg"),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
               title,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
             )
           ],
         ),

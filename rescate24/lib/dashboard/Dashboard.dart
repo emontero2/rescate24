@@ -4,53 +4,24 @@ import 'package:provider/provider.dart';
 import 'package:rescate24/components/my_bottom_bar.dart';
 import 'package:rescate24/components/my_icon_button.dart';
 import 'package:rescate24/components/my_top_bar.dart';
+import 'package:rescate24/components/news_card.dart';
 import 'package:rescate24/components/person_card.dart';
+import 'package:rescate24/models/News.dart';
 import 'package:rescate24/models/PersonModel.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
   @override
   State<Dashboard> createState() => _DashboardState();
+  List<News> news = News.generateNews();
 }
 
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     int quantityOfAffiliates = context.read<PersonModel>().person.length;
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: SvgPicture.asset("lib/images/R24logo1.svg"),
-        ),
-        backgroundColor: const Color(0xFF560265),
-        actions: [
-          SvgPicture.asset(
-            "lib/images/notifications_icon.svg",
-            color: Colors.white,
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            child: VerticalDivider(
-              color: Colors.white,
-              thickness: 2,
-            ),
-          ),
-          const Center(
-            child: Text(
-              "Bienvenid@ \nDiana Rivas",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          const CircleAvatar(
-            backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
-          )
-        ],
-      ),
-      body: Center(
+    return Center(
+      child: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(
@@ -158,6 +129,37 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(
+              height: 10,
+            ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 100, minWidth: 400),
+              child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade400)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Calendario de simpatizantes",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      TableCalendar(
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2030, 3, 14),
+                        focusedDay: DateTime.now(),
+                        rowHeight: 30.2,
+                      ),
+                    ],
+                  )),
+            ),
+            const SizedBox(
               height: 20,
             ),
             ConstrainedBox(
@@ -174,36 +176,30 @@ class _DashboardState extends State<Dashboard> {
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
                       const Text(
-                        "Simpatizantes",
+                        "Noticias destacadas",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
-                      Consumer<PersonModel>(
-                          builder: (context, personModel, child) {
-                        if (personModel.person.isNotEmpty) {
-                          return SizedBox(
-                            height: 200,
-                            child: ListView.separated(
-                                itemCount: personModel.person.length,
-                                separatorBuilder: (context, index) =>
-                                    const Divider(),
-                                itemBuilder: (context, int index) => PersonCard(
-                                    person: personModel.person[index])),
-                          );
-                        } else {
-                          return const Text(
-                              "No hay personas afiliadas actualmente");
-                        }
-                      })
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                            itemCount: widget.news.length,
+                            itemBuilder: (context, index) {
+                              return NewsCard(
+                                  hasBorder: false,
+                                  image: widget.news[index].image,
+                                  title: widget.news[index].title,
+                                  date: widget.news[index].date);
+                            }),
+                      )
                     ],
                   )),
-            )
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: const MyBottomBar(),
     );
   }
 }
