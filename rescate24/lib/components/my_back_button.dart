@@ -4,7 +4,9 @@ import 'package:flutter_svg/svg.dart';
 
 class MyBackButton extends StatelessWidget {
   final String title;
-  const MyBackButton({Key? key, required this.title}) : super(key: key);
+  final Color? color;
+  const MyBackButton({Key? key, required this.title, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +16,23 @@ class MyBackButton extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
             border: Border(
-                bottom: BorderSide(color: Colors.grey.shade300, width: 2))),
+                bottom: color != null
+                    ? BorderSide.none
+                    : BorderSide(color: Colors.grey.shade300, width: 2))),
         child: Row(
           children: [
-            SvgPicture.asset("lib/images/left_icon.svg"),
+            SvgPicture.asset(
+              "lib/images/left_icon.svg",
+              color: color,
+            ),
             const SizedBox(
               width: 10,
             ),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: color ?? Colors.black, fontWeight: FontWeight.bold),
             )
           ],
         ),

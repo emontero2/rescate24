@@ -6,6 +6,7 @@ import 'package:rescate24/components/my_bottom_bar.dart';
 import 'package:rescate24/components/my_button.dart';
 import 'package:rescate24/components/my_icon_button.dart';
 import 'package:rescate24/components/my_text_field.dart';
+import 'package:rescate24/sympathizer/dialog_vinculation.dart';
 
 class AddSympathizerPage extends StatelessWidget {
   AddSympathizerPage({Key? key}) : super(key: key);
@@ -13,6 +14,13 @@ class AddSympathizerPage extends StatelessWidget {
   final cedulaController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Future<void> _showSimpleDialog() async {
+      await showDialog<void>(
+        context: context,
+        builder: (context) => DialogVinculation(),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -59,10 +67,20 @@ class AddSympathizerPage extends StatelessWidget {
             "Localizador de Simpatizante Registrado",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
-          MyTextField(
-              controller: cedulaController,
-              hintText: "Ingrese el numero del localizador",
-              obscureText: false),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: MyTextField(
+                    controller: cedulaController,
+                    hintText: "Ingrese el numero del localizador",
+                    obscureText: false),
+              ),
+              IconButton(
+                  onPressed: () => {_showSimpleDialog()},
+                  icon: const Icon(Icons.camera_alt))
+            ],
+          ),
           const SizedBox(
             height: 10,
           ),

@@ -59,8 +59,11 @@ class _HomeState extends State<Home> {
           const SizedBox(
             width: 5,
           ),
-          const CircleAvatar(
-            backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/user'),
+            child: const CircleAvatar(
+              backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
+            ),
           )
         ],
       ),

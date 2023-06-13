@@ -126,9 +126,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       print("    success: $success");
       print("    transactionId: $transactionId");
     });
-    const EventChannel('flutter_document_reader_api/event/database_progress')
-        .receiveBroadcastStream()
-        .listen((progress) => print("Downloading database: $progress%"));
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen((jsonString) => handleCompletion(
@@ -204,16 +201,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   }
 
   Future<void> initPlatformState() async {
-    print("Initializing...");
-    print(await DocumentReader.prepareDatabase("Full"));
-
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    print(await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    }));
-    print("Ready");
     Regula.FaceSDK.init().then((json) {
       var response = jsonDecode(json);
       if (!response["success"]) {
@@ -368,7 +355,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
               onTap: () {
                 setState(() {
                   if (activeStep == 4) {
-                    var person = Person();
+                    var person = Person.empty();
                     person.birthDay = _birthDay;
                     person.docNumber = _documentNumber;
                     person.gnere = _genre;

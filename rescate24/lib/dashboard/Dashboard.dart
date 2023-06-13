@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rescate24/components/my_bottom_bar.dart';
@@ -17,6 +21,29 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initPlatformState();
+    const EventChannel('flutter_document_reader_api/event/database_progress')
+        .receiveBroadcastStream()
+        .listen((progress) => print("Downloading database: $progress%"));
+  }
+
+  Future<void> initPlatformState() async {
+    print("Initializing...");
+    print(await DocumentReader.prepareDatabase("Full"));
+
+    ByteData byteData = await rootBundle.load("assets/regula.license");
+    print(await DocumentReader.initializeReader({
+      "license": base64.encode(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+      "delayedNNLoad": true
+    }));
+    print("Ready");
+  }
+
   @override
   Widget build(BuildContext context) {
     int quantityOfAffiliates = context.read<PersonModel>().person.length;

@@ -2,6 +2,10 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 class Person {
+  Person.empty();
+  Person(this._name, this._lastName, this._docNumber, this._gnere,
+      this._liveness, this._portrait, this._birthDay);
+
   late String _name;
 
   String get name => _name;
@@ -81,4 +85,11 @@ class Person {
   get email => _email;
 
   set email(value) => _email = value;
+
+  static List<Person> generatePerson() {
+    return List.generate(
+        5,
+        (index) => Person("Peter", "Mansueta", "402-239302-3", "M", false, null,
+            "29-19-2023"));
+  }
 }

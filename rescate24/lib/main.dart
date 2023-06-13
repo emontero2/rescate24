@@ -6,6 +6,7 @@ import 'package:rescate24/news/news_screen.dart';
 import 'package:rescate24/sympathizer/add_sympathizer_page.dart';
 import 'package:rescate24/sympathizer/register_asistant.dart';
 import 'package:provider/provider.dart';
+import 'package:rescate24/user/user_screen.dart';
 
 import 'models/PersonModel.dart';
 
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => Dashboard(),
         '/add_sympathizer': (context) => AddSympathizerPage(),
         '/register_assitant': (context) => const RegisterAsistant(),
-        '/news_screen': (context) => const NewsScreen()
+        '/news_screen': (context) => const NewsScreen(),
+        '/user': (context) => const UserScreen()
       },
     );
   }
