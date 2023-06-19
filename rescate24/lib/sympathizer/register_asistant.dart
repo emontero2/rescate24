@@ -447,134 +447,136 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          const MyBackButton(
-            title: "Asistente de Registro",
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            alignment: Alignment.topLeft,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: const Text(
-              "Pasos",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const MyBackButton(
+              title: "Asistente de Registro",
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                AnotherStepper(
-                  stepperList: [
-                    StepperData(
-                        iconWidget: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: getActiveColor(0)),
-                    )),
-                    StepperData(
-                        iconWidget: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: getActiveColor(1)),
-                    )),
-                    StepperData(
-                        iconWidget: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: getActiveColor(2)),
-                    )),
-                    StepperData(
-                        iconWidget: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: getActiveColor(3)),
-                    ))
-                  ],
-                  stepperDirection: Axis.horizontal,
-                  iconWidth: 80,
-                  iconHeight: 10,
-                  barThickness: 0,
-                  activeIndex: activeStep,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(""),
-                      _liveness == "nil"
-                          ? Text(
-                              "1",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : SvgPicture.asset(
-                              _liveness == "passed"
-                                  ? "lib/images/check_icon.svg"
-                                  : "lib/images/x_mark_icon.svg",
-                              width: 20,
-                              height: 20,
-                              color: _liveness == "passed"
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                      Text(""),
-                      _name.isEmpty
-                          ? Text("2",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold))
-                          : SvgPicture.asset(
-                              "lib/images/check_icon.svg",
-                              width: 20,
-                              height: 20,
-                              color: Colors.green,
-                            ),
-                      Text(""),
-                      isAnythingEmpty()
-                          ? Text("3",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold))
-                          : SvgPicture.asset(
-                              "lib/images/check_icon.svg",
-                              width: 20,
-                              height: 20,
-                              color: Colors.green,
-                            ),
-                      Text(""),
-                      Text("4",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Text(
+                "Pasos",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  AnotherStepper(
+                    stepperList: [
+                      StepperData(
+                          iconWidget: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(color: getActiveColor(0)),
+                      )),
+                      StepperData(
+                          iconWidget: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(color: getActiveColor(1)),
+                      )),
+                      StepperData(
+                          iconWidget: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(color: getActiveColor(2)),
+                      )),
+                      StepperData(
+                          iconWidget: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(color: getActiveColor(3)),
+                      ))
                     ],
+                    stepperDirection: Axis.horizontal,
+                    iconWidth: 80,
+                    iconHeight: 10,
+                    barThickness: 0,
+                    activeIndex: activeStep,
                   ),
-                )
-              ],
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(""),
+                        _liveness == "nil"
+                            ? Text(
+                                "1",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : SvgPicture.asset(
+                                _liveness == "passed"
+                                    ? "lib/images/check_icon.svg"
+                                    : "lib/images/x_mark_icon.svg",
+                                width: 20,
+                                height: 20,
+                                color: _liveness == "passed"
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
+                        Text(""),
+                        _name.isEmpty
+                            ? Text("2",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))
+                            : SvgPicture.asset(
+                                "lib/images/check_icon.svg",
+                                width: 20,
+                                height: 20,
+                                color: Colors.green,
+                              ),
+                        Text(""),
+                        isAnythingEmpty()
+                            ? Text("3",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold))
+                            : SvgPicture.asset(
+                                "lib/images/check_icon.svg",
+                                width: 20,
+                                height: 20,
+                                color: Colors.green,
+                              ),
+                        Text(""),
+                        Text("4",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ConstrainedBox(
-              constraints:
-                  const BoxConstraints(maxHeight: 380.0, minHeight: 380),
-              child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(color: Colors.grey, width: 2.0)),
-                  child: getActiveStepWidget()),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxHeight: 380.0, minHeight: 380),
+                child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.grey, width: 2.0)),
+                    child: getActiveStepWidget()),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          getBottomButtons()
-        ],
+            const SizedBox(
+              height: 5,
+            ),
+            getBottomButtons()
+          ],
+        ),
       ),
       bottomNavigationBar: const MyBottomBar(),
     );

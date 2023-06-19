@@ -1,8 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rescate24/components/my_text_field.dart';
 
-class Step3 extends StatelessWidget {
+class Step3 extends StatefulWidget {
   Step3(
       {Key? key,
       required this.provinceController,
@@ -18,6 +24,33 @@ class Step3 extends StatelessWidget {
   final TextEditingController phoneNumberResidenceController;
   final TextEditingController phoneNumberController;
   final TextEditingController emailController;
+
+  @override
+  State<Step3> createState() => _Step3State();
+}
+
+class _Step3State extends State<Step3> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    readFile();
+  }
+
+  void readFile() async {
+    ByteData data = await rootBundle.load("assets/provincias.xlsx");
+    var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    var excel = Excel.decodeBytes(bytes);
+
+    for (var table in excel.tables.keys) {
+      print(table); //sheet Name
+      print(excel.tables[table]!.maxCols);
+      print(excel.tables[table]!.maxRows);
+      for (var row in excel.tables[table]!.rows) {
+        print('$row');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +81,7 @@ class Step3 extends StatelessWidget {
               style: TextStyle(color: Colors.black),
             ),
           ),
-          MyTextField(
-              controller: provinceController, hintText: "", obscureText: false),
+          //DropdownButtonHideUnderline(child: DropdownButton2(items: )),
           SizedBox(
             height: 10,
           ),
@@ -62,7 +94,9 @@ class Step3 extends StatelessWidget {
             ),
           ),
           MyTextField(
-              controller: MunicipeController, hintText: "", obscureText: false),
+              controller: widget.MunicipeController,
+              hintText: "",
+              obscureText: false),
           SizedBox(
             height: 10,
           ),
@@ -75,7 +109,9 @@ class Step3 extends StatelessWidget {
             ),
           ),
           MyTextField(
-              controller: sectorController, hintText: "", obscureText: false),
+              controller: widget.sectorController,
+              hintText: "",
+              obscureText: false),
           SizedBox(
             height: 10,
           ),
@@ -102,7 +138,7 @@ class Step3 extends StatelessWidget {
             ),
           ),
           MyTextField(
-              controller: phoneNumberResidenceController,
+              controller: widget.phoneNumberResidenceController,
               hintText: "",
               obscureText: false),
           SizedBox(
@@ -120,7 +156,7 @@ class Step3 extends StatelessWidget {
             ),
           ),
           MyTextField(
-              controller: phoneNumberController,
+              controller: widget.phoneNumberController,
               hintText: "",
               obscureText: false),
           SizedBox(
@@ -138,7 +174,9 @@ class Step3 extends StatelessWidget {
             ),
           ),
           MyTextField(
-              controller: emailController, hintText: "", obscureText: false),
+              controller: widget.emailController,
+              hintText: "",
+              obscureText: false),
           SizedBox(
             height: 10,
           ),

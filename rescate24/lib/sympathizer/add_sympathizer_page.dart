@@ -97,7 +97,8 @@ class AddSympathizerPage extends StatelessWidget {
             height: 20,
           ),
           GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/register_assitant'),
+              onTap: () =>
+                  Navigator.pushReplacementNamed(context, '/register_assitant'),
               child: const MyIconButton(title: "Asistente de Registro")),
           const SizedBox(
             height: 50,
