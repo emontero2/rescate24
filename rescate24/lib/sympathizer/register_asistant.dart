@@ -39,8 +39,6 @@ final emailController = TextEditingController();
 
 int activeStep = 0;
 
-String _liveness = "nil";
-String _similarity = "nil";
 String _name = "";
 String _genre = "";
 String _birthDay = "";
@@ -51,45 +49,43 @@ List<List<String>> _scenarios = [];
 String _selectedScenario = "FullProcess";
 Uint8List? _portraitBytes = null;
 Uint8List? _docImageBytes = null;
-var image1 = new Regula.MatchFacesImage();
-var image2 = new Regula.MatchFacesImage();
-var img1 = null;
-var img2 = null;
-bool isFinish = false;
 
-Widget getActiveStepWidget() {
-  if (activeStep == 0) {
-    return const Step2();
-  } else if (activeStep == 1) {
-    return Step3(
-      MunicipeController: MunicipeController,
-      provinceController: provinceController,
-      sectorController: sectorController,
-      phoneNumberController: phoneNumberController,
-      phoneNumberResidenceController: phoneNumberResidenceController,
-      emailController: emailController,
-    );
-  } else if (activeStep == 2) {
-    return StepResult(
-      name: _name,
-      doc_image: _portraitBytes,
-      docNumber: _documentNumber,
-      birthDay: _birthDay,
-      genre: _genre,
-      province: provinceController.text,
-      sector: sectorController.text,
-      municipality: MunicipeController.text,
-    );
-  } else if (activeStep == 3) {
-    return StepFinish(
-      isLivenessOk: _liveness == "passed" && _similarity != "error",
-      isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
-    );
-  } else if (activeStep == 3 && isFinish) {
-    return Container();
-  } else {
-    return Container();
-  }
+bool isFinish = false;
+List<String> whiteList = [
+  "00116145889",
+  "00118314723",
+  "00113746598",
+  "40215765898"
+];
+
+List<Widget> _pages = [
+  const Step2(),
+  Step3(
+    MunicipeController: MunicipeController,
+    provinceController: provinceController,
+    sectorController: sectorController,
+    phoneNumberController: phoneNumberController,
+    phoneNumberResidenceController: phoneNumberResidenceController,
+    emailController: emailController,
+  ),
+  StepResult(
+    name: _name,
+    doc_image: _portraitBytes,
+    docNumber: _documentNumber,
+    birthDay: _birthDay,
+    genre: _genre,
+    province: provinceController.text,
+    sector: sectorController.text,
+    municipality: MunicipeController.text,
+  ),
+  StepFinish(
+    isLivenessOk: isOnWhiteList(_documentNumber),
+    isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
+  )
+];
+
+bool isOnWhiteList(String docNumber) {
+  return whiteList.contains(docNumber);
 }
 
 bool isAnythingEmpty() {
@@ -115,17 +111,22 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   @override
   void initState() {
     super.initState();
+    activeStep = 0;
+
+    _name = "";
+    _genre = "";
+    _birthDay = "";
+    _documentNumber = "";
+    _portrait = Image.asset("lib/images/portrait.png");
+    _docImage = Image.asset("lib/images/id.png");
+    MunicipeController.clear();
+    provinceController.clear();
+    emailController.clear();
+    phoneNumberController.clear();
+    phoneNumberResidenceController.clear();
+    sectorController.clear();
     initPlatformState();
-    const EventChannel('flutter_face_api/event/video_encoder_completion')
-        .receiveBroadcastStream()
-        .listen((event) {
-      var response = jsonDecode(event);
-      String transactionId = response["transactionId"];
-      bool success = response["success"];
-      print("video_encoder_completion:");
-      print("    success: $success");
-      print("    transactionId: $transactionId");
-    });
+
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen((jsonString) => handleCompletion(
@@ -167,12 +168,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     var sector =
         await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STATE);
 
-    for (var textField in results.textResult?.fields ?? []) {
-      for (var value in textField?.values) {
-        print(
-            '${textField.fieldName}, value: ${value?.value}, source: ${value?.sourceType}');
-      }
-    }
     MunicipeController.text = municipe ?? "";
     provinceController.text = province ?? "";
     sectorController.text = sector ?? "";
@@ -186,7 +181,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       _portrait = Image.asset('assets/images/portrait.png');
       if (doc != null) {
         _docImage = Image.memory(doc.data!.contentAsBytes());
-        setImage(false, doc.data!.contentAsBytes(), Regula.ImageType.PRINTED);
+
         setState(() {
           _docImageBytes = doc.data!.contentAsBytes();
         });
@@ -208,20 +203,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         print(json);
       }
     });
-
-    List<List<String>> scenarios = [];
-    var scenariosTemp =
-        json.decode(await DocumentReader.getAvailableScenarios());
-    //print(scenariosTemp);
-    for (var i = 0; i < scenariosTemp.length; i++) {
-      DocumentReaderScenario scenario = DocumentReaderScenario.fromJson(
-          scenariosTemp[i] is String
-              ? json.decode(scenariosTemp[i])
-              : scenariosTemp[i])!;
-      scenarios.add([scenario.name!, scenario.caption!]);
-      print(scenariosTemp[i]);
-    }
-    setState(() => _scenarios = scenarios);
 
     DocumentReader.setConfig({
       "functionality": {"videoCaptureMotionControl": true},
@@ -255,71 +236,30 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     });
   }
 
-  matchFaces() {
-    if (image1.bitmap == null ||
-        image1.bitmap == "" ||
-        image2.bitmap == null ||
-        image2.bitmap == "") return;
-    setState(() => _similarity = "Processing...");
-    var request = Regula.MatchFacesRequest();
-    request.images = [image1, image2];
-    Regula.FaceSDK.matchFaces(jsonEncode(request)).then((value) {
-      var response = Regula.MatchFacesResponse.fromJson(json.decode(value));
-      Regula.FaceSDK.matchFacesSimilarityThresholdSplit(
-              jsonEncode(response!.results), 0.75)
-          .then((str) {
-        var split = Regula.MatchFacesSimilarityThresholdSplit.fromJson(
-            json.decode(str));
-        setState(() => _similarity = split!.matchedFaces.length > 0
-            ? ((split.matchedFaces[0]!.similarity! * 100).toStringAsFixed(2) +
-                "%")
-            : "error");
-      });
-      print("similarity: " + _similarity);
-    });
-  }
-
-  setImage(bool first, Uint8List? imageFile, int type) {
-    if (imageFile == null) return;
-    // setState(() => _similarity = "nil");
-    if (first) {
-      image1.bitmap = base64Encode(imageFile);
-      image1.imageType = type;
-      setState(() {
-        img1 = Image.memory(imageFile);
-        _liveness = "nil";
-      });
-    } else {
-      image2.bitmap = base64Encode(imageFile);
-      image2.imageType = type;
-      setState(() => img2 = Image.memory(imageFile));
+  addPerson() {
+    var person = Person.empty();
+    if (isOnWhiteList(_documentNumber)) {
+      person.liveness = true;
     }
+    person.birthDay = _birthDay;
+    person.docNumber = _documentNumber;
+    person.gnere = _genre;
+    person.name = _name;
+    person.portrait = _portraitBytes;
+    person.municipe = MunicipeController.text;
+    person.province = provinceController.text;
+    person.phoneNumber = phoneNumberController.text;
+    person.email = emailController.text;
+    Provider.of<PersonModel>(context, listen: false).add(person);
   }
 
   Widget getButton() {
-    if (activeStep == 3 && isFinish) {
+    if (activeStep == 3) {
       return const MyButton(title: "Finalizar");
     } else {
       return const MyButton(title: "Continuar");
     }
   }
-
-  liveness() => Regula.FaceSDK.startLivenessWithConfig(
-          {"skipStep": Regula.LivenessSkipStep.START_STEP}).then((value) {
-        var result = Regula.LivenessResponse.fromJson(json.decode(value));
-        setImage(true, base64Decode(result!.bitmap!.replaceAll("\n", "")),
-            Regula.ImageType.LIVE);
-        setState(() => _liveness =
-            result.liveness == Regula.LivenessStatus.PASSED
-                ? "passed"
-                : "unknown");
-        if (result.exception == null ||
-            result.exception?.errorCode == Regula.LivenessErrorCode.CANCELLED) {
-          activeStep++;
-        } else {
-          liveness();
-        }
-      });
 
   Widget getBottomButtons() {
     if (activeStep == 0) {
@@ -340,7 +280,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             });
           },
           child: getButton());
-    } else if (activeStep == 4) {
+    } else if (activeStep == 3) {
       return Column(
         children: [
           GestureDetector(
@@ -354,21 +294,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  if (activeStep == 4) {
-                    var person = Person.empty();
-                    person.birthDay = _birthDay;
-                    person.docNumber = _documentNumber;
-                    person.gnere = _genre;
-                    person.name = _name;
-                    person.portrait = _portraitBytes;
-                    person.municipe = MunicipeController.text;
-                    person.province = provinceController.text;
-                    person.phoneNumber = phoneNumberController.text;
-                    person.email = emailController.text;
-                    Provider.of<PersonModel>(context, listen: false)
-                        .add(person);
-                    Navigator.pop(context);
+                  if (activeStep == 3) {
+                    addPerson();
                     dispose();
+                    Navigator.pop(context);
                   } else {
                     if (activeStep == 0) {
                       DocumentReader.showScanner();
@@ -399,8 +328,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
               onTap: () {
                 setState(() {
                   if (activeStep == 1 && !isAnythingEmpty() ||
-                      activeStep == 2 ||
-                      activeStep == 3) {
+                      activeStep == 2) {
                     activeStep++;
                   }
                 });
@@ -414,176 +342,169 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: SvgPicture.asset("lib/images/R24logo1.svg"),
-        ),
-        backgroundColor: const Color(0xFF560265),
-        actions: [
-          SvgPicture.asset(
-            "lib/images/notifications_icon.svg",
-            color: Colors.white,
+        backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SvgPicture.asset("lib/images/R24logo1.svg"),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            child: VerticalDivider(
+          backgroundColor: const Color(0xFF560265),
+          actions: [
+            SvgPicture.asset(
+              "lib/images/notifications_icon.svg",
               color: Colors.white,
-              thickness: 2,
             ),
-          ),
-          const Center(
-            child: Text(
-              "Bienvenid@ \nDiana Rivas",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          const CircleAvatar(
-            backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const MyBackButton(
-              title: "Asistente de Registro",
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Text(
-                "Pasos",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.0),
+              child: VerticalDivider(
+                color: Colors.white,
+                thickness: 2,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  AnotherStepper(
-                    stepperList: [
-                      StepperData(
-                          iconWidget: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: getActiveColor(0)),
-                      )),
-                      StepperData(
-                          iconWidget: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: getActiveColor(1)),
-                      )),
-                      StepperData(
-                          iconWidget: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: getActiveColor(2)),
-                      )),
-                      StepperData(
-                          iconWidget: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(color: getActiveColor(3)),
-                      ))
-                    ],
-                    stepperDirection: Axis.horizontal,
-                    iconWidth: 80,
-                    iconHeight: 10,
-                    barThickness: 0,
-                    activeIndex: activeStep,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(""),
-                        _liveness == "nil"
-                            ? Text(
-                                "1",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            : SvgPicture.asset(
-                                _liveness == "passed"
-                                    ? "lib/images/check_icon.svg"
-                                    : "lib/images/x_mark_icon.svg",
-                                width: 20,
-                                height: 20,
-                                color: _liveness == "passed"
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                        Text(""),
-                        _name.isEmpty
-                            ? Text("2",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold))
-                            : SvgPicture.asset(
-                                "lib/images/check_icon.svg",
-                                width: 20,
-                                height: 20,
-                                color: Colors.green,
-                              ),
-                        Text(""),
-                        isAnythingEmpty()
-                            ? Text("3",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold))
-                            : SvgPicture.asset(
-                                "lib/images/check_icon.svg",
-                                width: 20,
-                                height: 20,
-                                color: Colors.green,
-                              ),
-                        Text(""),
-                        Text("4",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: ConstrainedBox(
-                constraints:
-                    const BoxConstraints(maxHeight: 380.0, minHeight: 380),
-                child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.grey, width: 2.0)),
-                    child: getActiveStepWidget()),
+            const Center(
+              child: Text(
+                "Bienvenid@ \nDiana Rivas",
+                style: TextStyle(color: Colors.white),
               ),
             ),
             const SizedBox(
-              height: 5,
+              width: 5,
             ),
-            getBottomButtons()
+            const CircleAvatar(
+              backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
+            )
           ],
         ),
-      ),
-      bottomNavigationBar: const MyBottomBar(),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const MyBackButton(
+                title: "Asistente de Registro",
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Text(
+                  "Pasos",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    AnotherStepper(
+                      stepperList: [
+                        StepperData(
+                            iconWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: getActiveColor(0)),
+                        )),
+                        StepperData(
+                            iconWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: getActiveColor(1)),
+                        )),
+                        StepperData(
+                            iconWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: getActiveColor(2)),
+                        )),
+                        StepperData(
+                            iconWidget: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: getActiveColor(3)),
+                        ))
+                      ],
+                      stepperDirection: Axis.horizontal,
+                      iconWidth: 80,
+                      iconHeight: 10,
+                      barThickness: 0,
+                      activeIndex: activeStep,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(""),
+                          _name.isEmpty
+                              ? const Text(
+                                  "1",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              : SvgPicture.asset(
+                                  _name.isNotEmpty
+                                      ? "lib/images/check_icon.svg"
+                                      : "lib/images/x_mark_icon.svg",
+                                  width: 20,
+                                  height: 20,
+                                  color: _name.isNotEmpty
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                          const Text(""),
+                          isAnythingEmpty()
+                              ? const Text("2",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold))
+                              : SvgPicture.asset(
+                                  "lib/images/check_icon.svg",
+                                  width: 20,
+                                  height: 20,
+                                  color: Colors.green,
+                                ),
+                          const Text(""),
+                          (isAnythingEmpty() && _name.isEmpty)
+                              ? const Text("3",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold))
+                              : SvgPicture.asset(
+                                  "lib/images/check_icon.svg",
+                                  width: 20,
+                                  height: 20,
+                                  color: Colors.green,
+                                ),
+                          const Text(""),
+                          const Text("4",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: ConstrainedBox(
+                  constraints:
+                      const BoxConstraints(maxHeight: 380.0, minHeight: 380),
+                  child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: Colors.grey, width: 2.0)),
+                      child: _pages.elementAt(activeStep)),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              getBottomButtons()
+            ],
+          ),
+        ));
   }
 }

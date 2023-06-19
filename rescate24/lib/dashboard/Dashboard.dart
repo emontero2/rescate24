@@ -15,35 +15,15 @@ import 'package:rescate24/models/PersonModel.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
+  const Dashboard({super.key, required this.isDatabaseReady});
+
   @override
   State<Dashboard> createState() => _DashboardState();
-  List<News> news = News.generateNews();
+  final bool isDatabaseReady;
 }
 
 class _DashboardState extends State<Dashboard> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    initPlatformState();
-    const EventChannel('flutter_document_reader_api/event/database_progress')
-        .receiveBroadcastStream()
-        .listen((progress) => print("Downloading database: $progress%"));
-  }
-
-  Future<void> initPlatformState() async {
-    print("Initializing...");
-    print(await DocumentReader.prepareDatabase("Full"));
-
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    print(await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    }));
-    print("Ready");
-  }
-
+  List<News> news = News.generateNews();
   @override
   Widget build(BuildContext context) {
     int quantityOfAffiliates = context.read<PersonModel>().person.length;
@@ -65,7 +45,9 @@ class _DashboardState extends State<Dashboard> {
               height: 20,
             ),
             GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/add_sympathizer'),
+                onTap: () => widget.isDatabaseReady
+                    ? Navigator.pushNamed(context, '/add_sympathizer')
+                    : null,
                 child: const MyIconButton(title: "Agregar Simpatizante")),
             const SizedBox(
               height: 20,
@@ -136,9 +118,12 @@ class _DashboardState extends State<Dashboard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text(
-                            "0",
-                            style: TextStyle(
+                          Text(
+                            (quantityOfAffiliates < 10
+                                    ? 10 - quantityOfAffiliates
+                                    : 0)
+                                .toString(),
+                            style: const TextStyle(
                                 color: Colors.purple,
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold),
@@ -147,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
                             width: 10,
                           ),
                           const Text(
-                              "Total de simpatizantes registrados en su \nestructura")
+                              "Total de simpatizantes registrados en \nsu estructura")
                         ],
                       ),
                     ),
@@ -212,13 +197,13 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(
                         height: 200,
                         child: ListView.builder(
-                            itemCount: widget.news.length,
+                            itemCount: news.length,
                             itemBuilder: (context, index) {
                               return NewsCard(
                                   hasBorder: false,
-                                  image: widget.news[index].image,
-                                  title: widget.news[index].title,
-                                  date: widget.news[index].date);
+                                  image: news[index].image,
+                                  title: news[index].title,
+                                  date: news[index].date);
                             }),
                       )
                     ],

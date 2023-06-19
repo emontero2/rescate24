@@ -6,8 +6,9 @@ import 'package:rescate24/models/Person.dart';
 import 'my_data_info.dart';
 
 class PersonCard extends StatelessWidget {
-  const PersonCard({Key? key, required this.person}) : super(key: key);
+  PersonCard({Key? key, required this.person, this.onTap}) : super(key: key);
   final Person person;
+  Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -34,18 +35,21 @@ class PersonCard extends StatelessWidget {
                 MyDataInfo(title: "Nombre:", description: person.name),
                 MyDataInfo(title: "Genero:", description: person.gnere),
                 MyDataInfo(title: "Nacimiento: ", description: person.birthDay),
-                RichText(
-                    text: TextSpan(children: [
-                  WidgetSpan(
-                      child: Icon(
-                    person.liveness ? Icons.check_circle : Icons.dangerous,
-                    color: person.liveness ? Colors.green : Colors.red,
-                  )),
-                  TextSpan(
-                      text: "Prueba de vida",
-                      style: TextStyle(
-                          color: person.liveness ? Colors.green : Colors.red))
-                ]))
+                GestureDetector(
+                  onTap: person.liveness == false ? onTap : null,
+                  child: RichText(
+                      text: TextSpan(children: [
+                    WidgetSpan(
+                        child: Icon(
+                      person.liveness ? Icons.check_circle : Icons.dangerous,
+                      color: person.liveness ? Colors.green : Colors.red,
+                    )),
+                    TextSpan(
+                        text: "Prueba de vida",
+                        style: TextStyle(
+                            color: person.liveness ? Colors.green : Colors.red))
+                  ])),
+                )
               ],
             ),
             const SizedBox(

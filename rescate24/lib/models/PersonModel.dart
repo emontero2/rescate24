@@ -12,6 +12,14 @@ class PersonModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLiveness(Person person) {
+    Person auxPerson = person;
+    auxPerson.liveness = true;
+    _persons[_persons.indexOf(person)] = auxPerson;
+
+    notifyListeners();
+  }
+
   void removeAll() {
     _persons.clear();
 

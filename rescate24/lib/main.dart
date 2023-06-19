@@ -32,9 +32,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => Home(),
         '/login': (context) => LoginPage(),
-        '/dashboard': (context) => Dashboard(),
+        '/dashboard': (context) => const Dashboard(
+              isDatabaseReady: false,
+            ),
         '/add_sympathizer': (context) => AddSympathizerPage(),
-        '/register_assitant': (context) => const RegisterAsistant(),
+        '/register_assitant': (context) => RegisterAsistant(
+              key: UniqueKey(),
+            ),
         '/news_screen': (context) => const NewsScreen(),
         '/user': (context) => const UserScreen()
       },
