@@ -37,11 +37,6 @@ class _HomeState extends State<Home> {
   Future<void> initPlatformState() async {
     print("Initializing...");
 
-    await DocumentReader.prepareDatabase("Full").catchError((Object error) {
-      setState(() {
-        isDatabaseReady = false;
-      });
-    });
     ByteData byteData = await rootBundle.load("assets/regula.license");
     print(await DocumentReader.initializeReader({
       "license": base64.encode(byteData.buffer

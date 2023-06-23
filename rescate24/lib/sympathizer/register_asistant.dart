@@ -18,6 +18,7 @@ import 'package:rescate24/sympathizer/step3.dart';
 import 'package:rescate24/sympathizer/step_finish.dart';
 import 'package:rescate24/sympathizer/step_result.dart';
 import 'package:flutter_face_api/face_api.dart' as Regula;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../components/my_back_button.dart';
 import '../components/my_bottom_bar.dart';
@@ -137,16 +138,38 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     if (completion.action == DocReaderAction.COMPLETE ||
         completion.action == DocReaderAction.TIMEOUT) {
       if (completion.results != null) {
-        activeStep++;
-        print(activeStep);
         displayResults(completion.results!);
-        print(completion.results);
+        if (_name.isNotEmpty && _documentNumber.isNotEmpty) {
+          activeStep++;
+        } else {
+          showErrorDialog(
+              "Error al leer los documentos, por favor, intenta denuevo.");
+        }
       } else {
         print("Error al leer los documentos");
       }
     } else {
       print("Error al leer los documentos");
     }
+  }
+
+  void showErrorDialog(String message) {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Error",
+      desc: message,
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )
+      ],
+    ).show();
   }
 
   displayResults(DocumentReaderResults results) async {
@@ -173,8 +196,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     sectorController.text = sector ?? "";
 
     setState(() {
-      _name = name?.split(" ")[0] ?? "No encontrado";
-      _documentNumber = documentNumber ?? "No encontrado";
+      _name = name?.split(" ")[0] ?? "";
+      _documentNumber = documentNumber ?? "";
       _birthDay = birthDay ?? "No encontrado";
       _genre = genre ?? "No encontrado";
       _docImage = Image.asset('assets/images/id.png');

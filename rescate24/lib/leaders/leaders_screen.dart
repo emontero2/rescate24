@@ -9,6 +9,7 @@ import 'package:rescate24/components/my_text_field.dart';
 import 'package:rescate24/components/person_card.dart';
 import 'package:rescate24/models/PersonModel.dart';
 import 'package:flutter_face_api/face_api.dart' as Regula;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../models/Person.dart';
 
@@ -73,13 +74,13 @@ class _LeadersScreenState extends State<LeadersScreen> {
                 : "unknown");
         if (result.exception == null ||
             result.exception?.errorCode == Regula.LivenessErrorCode.CANCELLED) {
-          Provider.of<PersonModel>(context, listen: false).setLiveness(person);
-        } else {
           liveness(person);
+        } else {
+          matchFaces(person);
         }
       });
 
-  matchFaces() {
+  matchFaces(Person person) {
     if (image1.bitmap == null ||
         image1.bitmap == "" ||
         image2.bitmap == null ||
@@ -94,13 +95,37 @@ class _LeadersScreenState extends State<LeadersScreen> {
           .then((str) {
         var split = Regula.MatchFacesSimilarityThresholdSplit.fromJson(
             json.decode(str));
-        setState(() => _similarity = split!.matchedFaces.length > 0
-            ? ((split.matchedFaces[0]!.similarity! * 100).toStringAsFixed(2) +
-                "%")
+        setState(() => _similarity = split!.matchedFaces.isNotEmpty
+            ? ("${(split.matchedFaces[0]!.similarity! * 100).toStringAsFixed(2)}%")
             : "error");
       });
-      print("similarity: " + _similarity);
+
+      if (_similarity != "error") {
+        Provider.of<PersonModel>(context).setLiveness(person);
+      } else {
+        showErrorDialog(
+            "Problema al intentar mostrar que esta vivo, favor, intente denuevo");
+      }
     });
+  }
+
+  void showErrorDialog(String message) {
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Error",
+      desc: message,
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )
+      ],
+    ).show();
   }
 
   @override
