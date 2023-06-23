@@ -59,31 +59,38 @@ List<String> whiteList = [
   "40215765898"
 ];
 
-List<Widget> _pages = [
-  const Step2(),
-  Step3(
-    MunicipeController: MunicipeController,
-    provinceController: provinceController,
-    sectorController: sectorController,
-    phoneNumberController: phoneNumberController,
-    phoneNumberResidenceController: phoneNumberResidenceController,
-    emailController: emailController,
-  ),
-  StepResult(
-    name: _name,
-    doc_image: _portraitBytes,
-    docNumber: _documentNumber,
-    birthDay: _birthDay,
-    genre: _genre,
-    province: provinceController.text,
-    sector: sectorController.text,
-    municipality: MunicipeController.text,
-  ),
-  StepFinish(
-    isLivenessOk: isOnWhiteList(_documentNumber),
-    isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
-  )
-];
+Widget getActiveStepWidget() {
+  if (activeStep == 0) {
+    return const Step2();
+  } else if (activeStep == 1) {
+    return Step3(
+      MunicipeController: MunicipeController,
+      provinceController: provinceController,
+      sectorController: sectorController,
+      phoneNumberController: phoneNumberController,
+      phoneNumberResidenceController: phoneNumberResidenceController,
+      emailController: emailController,
+    );
+  } else if (activeStep == 2) {
+    return StepResult(
+      name: _name,
+      doc_image: _portraitBytes,
+      docNumber: _documentNumber,
+      birthDay: _birthDay,
+      genre: _genre,
+      province: provinceController.text,
+      sector: sectorController.text,
+      municipality: MunicipeController.text,
+    );
+  } else if (activeStep == 3) {
+    return StepFinish(
+      isLivenessOk: isOnWhiteList(_documentNumber),
+      isCaptureDocumentOk: _name.isNotEmpty && _docImageBytes != null,
+    );
+  } else {
+    return Container();
+  }
+}
 
 bool isOnWhiteList(String docNumber) {
   return whiteList.contains(docNumber);
@@ -139,17 +146,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         completion.action == DocReaderAction.TIMEOUT) {
       if (completion.results != null) {
         displayResults(completion.results!);
-        if (_name.isNotEmpty && _documentNumber.isNotEmpty) {
-          activeStep++;
-        } else {
-          showErrorDialog(
-              "Error al leer los documentos, por favor, intenta denuevo.");
-        }
-      } else {
-        print("Error al leer los documentos");
       }
-    } else {
-      print("Error al leer los documentos");
     }
   }
 
@@ -216,6 +213,14 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         _portrait = Image.memory(portrait.data!.contentAsBytes());
       }
     });
+    if (_name.isNotEmpty && _documentNumber.isNotEmpty) {
+      activeStep++;
+    } else {
+      showErrorDialog(
+          "Error al leer los documentos, por favor, intenta denuevo.");
+    }
+    print("Name: " + _name);
+    print("documentnumber " + _documentNumber);
   }
 
   Future<void> initPlatformState() async {
@@ -485,7 +490,9 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                                   color: Colors.green,
                                 ),
                           const Text(""),
-                          (isAnythingEmpty() && _name.isEmpty)
+                          isAnythingEmpty() ||
+                                  _name.isEmpty ||
+                                  _documentNumber.isEmpty
                               ? const Text("3",
                                   style: TextStyle(
                                       color: Colors.black,
@@ -519,7 +526,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8.0),
                           border: Border.all(color: Colors.grey, width: 2.0)),
-                      child: _pages.elementAt(activeStep)),
+                      child: getActiveStepWidget()),
                 ),
               ),
               const SizedBox(
