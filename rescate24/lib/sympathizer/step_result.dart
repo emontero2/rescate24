@@ -27,58 +27,138 @@ class StepResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          "Informacion del simpatizante",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        Row(
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(left: 10, top: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            doc_image != null
-                ? Image.memory(
-                    doc_image!,
-                    width: 100,
-                    height: 100,
-                  )
-                : Image.asset(
-                    "lib/images/portrait.png",
-                    width: 100,
-                    height: 100,
-                  ),
-            Column(
+            const Text(
+              "Informacion del simpatizante",
+              style: TextStyle(
+                  color: Color(0xFF292929),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
               children: [
-                MyDataInfo(title: "Cedula: ", description: docNumber),
-                MyDataInfo(title: "Nombre: ", description: name),
-                MyDataInfo(title: "Genero: ", description: genre),
-                MyDataInfo(title: "Nacimiento: ", description: birthDay)
+                CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 50,
+                  child: doc_image != null
+                      ? Image.memory(
+                          doc_image!,
+                          width: 100,
+                          height: 100,
+                        )
+                      : Image.asset(
+                          "lib/images/portrait.png",
+                          width: 100,
+                          height: 100,
+                        ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MyDataInfo(title: "Cedula: ", description: docNumber),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    MyDataInfo(title: "Nombre: ", description: name),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    MyDataInfo(title: "Genero: ", description: genre),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    MyDataInfo(title: "Nacimiento: ", description: birthDay)
+                  ],
+                )
               ],
-            )
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                const Text(
+                  "Direccion",
+                  style: TextStyle(
+                      color: Color(0xFF292929),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+                Expanded(
+                  child: Container(
+                      margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 36,
+                      )),
+                )
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyDataInfo(title: "Provincia", description: province),
+                const SizedBox(
+                  height: 5,
+                ),
+                MyDataInfo(title: "Municipio", description: municipality),
+                const SizedBox(
+                  height: 5,
+                ),
+                MyDataInfo(title: "Sector", description: sector),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                const Text(
+                  "Lugar de Votacion",
+                  style: TextStyle(
+                      color: Color(0xFF292929),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                ),
+                Expanded(
+                  child: Container(
+                      margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                      child: const Divider(
+                        color: Colors.black,
+                        height: 36,
+                      )),
+                )
+              ],
+            ),
+            const MyDataInfo(title: "Provincia", description: "Santo Domingo"),
+            const SizedBox(
+              height: 5,
+            ),
+            const MyDataInfo(
+                title: "Municipio", description: "Distrito Nacional"),
+            const SizedBox(
+              height: 5,
+            ),
+            const MyDataInfo(title: "Recinto", description: "Las caobas"),
+            const SizedBox(
+              height: 5,
+            ),
+            const MyDataInfo(
+                title: "Colegio", description: "Las caobas high school")
           ],
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        const Text(
-          "Direccion",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        MyDataInfo(title: "Provincia", description: province),
-        MyDataInfo(title: "Municipio", description: municipality),
-        MyDataInfo(title: "Sector", description: sector),
-        const SizedBox(
-          height: 20,
-        ),
-        const Text(
-          "Lugar de Votacion",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        const MyDataInfo(title: "Provincia", description: "Santo Domingo"),
-        const MyDataInfo(title: "Municipio", description: "Distrito Nacional"),
-        const MyDataInfo(title: "Recinto", description: "Las caobas"),
-        const MyDataInfo(
-            title: "Colegio", description: "Las caobas high school")
-      ],
+      ),
     );
   }
 }

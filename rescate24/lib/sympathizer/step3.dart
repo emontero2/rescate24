@@ -112,14 +112,15 @@ class _Step3State extends State<Step3> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Provincia:",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -151,14 +152,15 @@ class _Step3State extends State<Step3> {
                         .toList())),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Municipio:",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -190,22 +192,26 @@ class _Step3State extends State<Step3> {
                         .toList())),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Sector:",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          MyTextField(
-              controller: widget.sectorController,
-              hintText: "",
-              obscureText: false),
+          SizedBox(
+            height: 35,
+            child: MyTextField(
+                controller: widget.sectorController,
+                hintText: "",
+                obscureText: false),
+          ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -219,56 +225,62 @@ class _Step3State extends State<Step3> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Telefono Residencial:",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          MyTextField(
-              controller: widget.phoneNumberResidenceController,
-              hintText: "",
-              obscureText: false),
-          const SizedBox(
-            height: 10,
+          SizedBox(
+            height: 35,
+            child: MyTextField(
+                controller: widget.phoneNumberResidenceController,
+                hintText: "",
+                obscureText: false),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Celular:",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          MyTextField(
-              controller: widget.phoneNumberController,
-              hintText: "",
-              obscureText: false),
-          const SizedBox(
-            height: 10,
+          SizedBox(
+            height: 35,
+            child: MyTextField(
+                controller: widget.phoneNumberController,
+                hintText: "",
+                obscureText: false),
           ),
           const SizedBox(
-            height: 10,
+            height: 12,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
               "Correo electronico (Email):",
               textAlign: TextAlign.start,
-              style: TextStyle(color: Colors.black),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
-          MyTextField(
-              controller: widget.emailController,
-              hintText: "",
-              obscureText: false),
+          SizedBox(
+            height: 35,
+            child: MyTextField(
+                controller: widget.emailController,
+                hintText: "",
+                obscureText: false),
+          ),
           const SizedBox(
             height: 10,
           ),

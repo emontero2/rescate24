@@ -92,8 +92,11 @@ class _DashboardState extends State<Dashboard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text(
-                            "0",
+                          Text(
+                            (quantityOfAffiliates < 10
+                                    ? 10 - quantityOfAffiliates
+                                    : 0)
+                                .toString(),
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontSize: 30,
@@ -119,10 +122,7 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            (quantityOfAffiliates < 10
-                                    ? 10 - quantityOfAffiliates
-                                    : 0)
-                                .toString(),
+                            "10",
                             style: const TextStyle(
                                 color: Colors.purple,
                                 fontSize: 30,

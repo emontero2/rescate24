@@ -47,13 +47,7 @@ class StepFinish extends StatelessWidget {
             description: "Captura de datos complementario \ny de contacto"),
         const SizedBox(
           height: 20,
-        ),
-        CheckMarkText(
-            icon: isLivenessOk
-                ? "lib/images/check_icon.svg"
-                : "lib/images/x_mark_icon.svg",
-            description:
-                "Prueba de vida y validacion final \ndel simpatizante"),
+        )
       ],
     );
   }

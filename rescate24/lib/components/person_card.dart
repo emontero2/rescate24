@@ -35,30 +35,35 @@ class PersonCard extends StatelessWidget {
                 MyDataInfo(title: "Nombre:", description: person.name),
                 MyDataInfo(title: "Genero:", description: person.gnere),
                 MyDataInfo(title: "Nacimiento: ", description: person.birthDay),
-                GestureDetector(
-                  onTap: person.liveness == false ? onTap : null,
-                  child: RichText(
-                      text: TextSpan(children: [
-                    WidgetSpan(
-                        child: Icon(
-                      person.liveness ? Icons.check_circle : Icons.dangerous,
-                      color: person.liveness ? Colors.green : Colors.red,
-                    )),
-                    TextSpan(
-                        text: "Prueba de vida",
-                        style: TextStyle(
-                            color: person.liveness ? Colors.green : Colors.red))
-                  ])),
-                )
+                if (person.liveness == false)
+                  ElevatedButton.icon(
+                    icon: Icon(
+                      Icons.autorenew,
+                      color: Colors.green,
+                    ),
+                    onPressed: onTap,
+                    label: Text(
+                      "Prueba de vida",
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      side: BorderSide(color: Colors.green),
+                    ),
+                  ),
               ],
             ),
             const SizedBox(
               width: 10,
             ),
-            IconButton(
-                color: Colors.grey,
-                onPressed: null,
-                icon: SvgPicture.asset("lib/images/whatsapp.svg"))
+            Icon(
+              person.liveness ? Icons.check_circle : Icons.dangerous,
+              color: person.liveness ? Colors.green : Colors.red,
+              size: 35,
+            )
           ],
         ),
       ),
