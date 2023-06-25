@@ -172,6 +172,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
   displayResults(DocumentReaderResults results) async {
     var name = await results
         .textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+    var lastname =
+        await results.textFieldValueByType(EVisualFieldType.FT_LAST_NAME);
     var genre = await results.textFieldValueByType(EVisualFieldType.FT_SEX);
     var documentNumber =
         await results.textFieldValueByType(EVisualFieldType.FT_DOCUMENT_NUMBER);
@@ -182,18 +184,18 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     var portrait =
         await results.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
     var province =
-        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STATE);
+        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_CITY);
     var municipe = await results
         .textFieldValueByType(EVisualFieldType.FT_ADDRESS_MUNICIPALITY);
     var sector =
-        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STATE);
+        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_AREA);
 
     MunicipeController.text = municipe ?? "";
     provinceController.text = province ?? "";
     sectorController.text = sector ?? "";
 
     setState(() {
-      _name = name?.split(" ")[0] ?? "";
+      _name = name ?? "";
       _documentNumber = documentNumber ?? "";
       _birthDay = birthDay ?? "No encontrado";
       _genre = genre ?? "No encontrado";
@@ -219,8 +221,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       showErrorDialog(
           "Error al leer los documentos, por favor, intenta denuevo.");
     }
-    print("Name: " + _name);
-    print("documentnumber " + _documentNumber);
   }
 
   Future<void> initPlatformState() async {

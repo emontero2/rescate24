@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:rescate24/components/my_text_field.dart';
 import 'package:rescate24/sympathizer/register_asistant.dart';
 
+import '../models/Direccion.dart';
+
 class Step3 extends StatefulWidget {
   Step3(
       {Key? key,
@@ -31,8 +33,8 @@ class Step3 extends StatefulWidget {
 }
 
 class _Step3State extends State<Step3> {
-  late List<String> province;
-  late List<String> municipe;
+  List<Direccion> direction = [];
+
   String? municipeSelected;
   String? provinceSelected;
 
@@ -40,8 +42,6 @@ class _Step3State extends State<Step3> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    province = [];
-    municipe = [];
 
     readFile();
   }
@@ -55,6 +55,7 @@ class _Step3State extends State<Step3> {
 
     for (var table in excel.tables.keys) {
       for (var row in excel.tables[table]!.rows) {
+        var d = Direccion();
         if (row.any((element) =>
             element?.value?.toString().toLowerCase() ==
             "Provincia".toLowerCase())) {
@@ -79,17 +80,30 @@ class _Step3State extends State<Step3> {
           if (row[provinceIndex]?.value.toString().toLowerCase() !=
               "Provincia".toLowerCase()) {
             setState(() {
-              province = [...province, row[provinceIndex]!.value.toString()];
+              d.province = row[provinceIndex]!.value.toString().toLowerCase();
             });
           }
           if (row[municipeIndex]?.value.toString().toLowerCase() !=
               "Municipio".toLowerCase()) {
             setState(() {
-              municipe = [...municipe, row[municipeIndex]!.value.toString()];
+              d.municipe = row[municipeIndex]!.value.toString().toLowerCase();
             });
           }
         }
+        direction.add(d);
       }
+    }
+    if (direction.any((Direccion element) =>
+        element.municipe.toLowerCase() ==
+        MunicipeController.text.toLowerCase())) {
+      var dd = direction.firstWhere((Direccion element) =>
+          element.municipe.toLowerCase() ==
+          MunicipeController.text.toLowerCase());
+      setState(() {
+        municipeSelected = MunicipeController.text.toLowerCase();
+        provinceSelected = dd.province;
+        provinceController.text = dd.province;
+      });
     }
   }
 
@@ -140,7 +154,8 @@ class _Step3State extends State<Step3> {
                         provinceSelected = value as String;
                       });
                     },
-                    items: province
+                    items: direction
+                        .map((e) => e.province)
                         .toSet()
                         .map((e) => DropdownMenuItem<String>(
                             value: e,
@@ -179,12 +194,13 @@ class _Step3State extends State<Step3> {
                         municipeSelected = value as String;
                       });
                     },
-                    items: municipe
+                    items: direction
+                        .map((e) => e.municipe)
                         .toSet()
                         .map((e) => DropdownMenuItem<String>(
                             value: e,
                             child: Text(
-                              e,
+                              e!,
                               style: const TextStyle(fontSize: 14),
                             )))
                         .toList())),
