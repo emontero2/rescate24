@@ -5,7 +5,9 @@ import 'package:flutter_svg/svg.dart';
 class MyBackButton extends StatelessWidget {
   final String title;
   final Color? color;
-  const MyBackButton({Key? key, required this.title, this.color})
+  final bool? hasBottomDivider;
+  const MyBackButton(
+      {Key? key, required this.title, this.color, this.hasBottomDivider})
       : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class MyBackButton extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
             border: Border(
-                bottom: color != null
+                bottom: hasBottomDivider == false
                     ? BorderSide.none
                     : BorderSide(color: Colors.grey.shade300, width: 2))),
         child: Row(
@@ -28,12 +30,17 @@ class MyBackButton extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: color ?? Colors.black, fontWeight: FontWeight.bold),
-            )
+            Flex(direction: Axis.horizontal, children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: color ?? Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ])
           ],
         ),
       ),

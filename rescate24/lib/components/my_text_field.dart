@@ -21,9 +21,10 @@ class MyTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        textAlignVertical: TextAlignVertical.bottom,
         decoration: InputDecoration(
             enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
+                borderSide: BorderSide(color: Color(0xFFDDDDDD))),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400)),
             hintText: hintText,
@@ -37,7 +38,7 @@ class MyTextField extends StatelessWidget {
                     ),
                   ),
             prefixIconConstraints:
-                const BoxConstraints(minHeight: 30.0, maxHeight: 30.0)),
+                const BoxConstraints(minHeight: 20.0, maxHeight: 20.0)),
       ),
     );
   }

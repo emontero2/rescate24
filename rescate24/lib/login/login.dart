@@ -28,9 +28,6 @@ class LoginPage extends StatelessWidget {
                   hintText: "Correo electronico o numero de cedula",
                   obscureText: false,
                   startIcon: "lib/images/user_icon.svg"),
-              const SizedBox(
-                height: 20,
-              ),
               MyTextField(
                   controller: passwordController,
                   hintText: "Contrasenia",
@@ -48,7 +45,7 @@ class LoginPage extends StatelessWidget {
                 height: 20,
               ),
               const Text(
-                "Olvido su contrasenia?",
+                "¿Olvidó su contraseña?",
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),

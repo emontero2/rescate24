@@ -110,7 +110,7 @@ bool isAnythingEmpty() {
 }
 
 Color getActiveColor(int active) {
-  return activeStep == active ? Colors.green : Colors.grey;
+  return activeStep == active ? Color(0xFF3CBC2F) : Color(0xFFE7ECF4);
 }
 
 class _RegisterAsistantState extends State<RegisterAsistant> {
@@ -294,15 +294,16 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       return GestureDetector(
           onTap: () {
             setState(() {
-              if (activeStep == 3 && isFinish) {
+              if (activeStep == 3) {
+                addPerson();
+                dispose();
                 Navigator.pop(context);
               } else {
                 if (activeStep == 0) {
                   DocumentReader.showScanner();
                 } else {
-                  setState(() {
-                    activeStep++;
-                  });
+                  activeStep++;
+                  activeStep++;
                 }
               }
             });
@@ -322,17 +323,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  if (activeStep == 3) {
-                    addPerson();
-                    dispose();
-                    Navigator.pop(context);
-                  } else {
-                    if (activeStep == 0) {
-                      DocumentReader.showScanner();
-                    } else {
-                      activeStep++;
-                    }
-                  }
+                  activeStep++;
                 });
               },
               child: getButton())
@@ -340,28 +331,37 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       );
     } else {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-              onTap: () {
-                setState(() {
-                  activeStep--;
-                });
-              },
-              child: const MyButton(
-                title: "Volver",
-                isGrey: true,
-              )),
-          GestureDetector(
+          Expanded(
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    activeStep--;
+                  });
+                },
+                child: const MyButton(
+                  title: "Volver",
+                  isGrey: true,
+                  margin: 12,
+                )),
+          ),
+          Expanded(
+            child: GestureDetector(
               onTap: () {
                 setState(() {
                   if (activeStep == 1 && !isAnythingEmpty() ||
                       activeStep == 2) {
                     activeStep++;
+                    activeStep++;
                   }
                 });
               },
-              child: getButton())
+              child: const MyButton(
+                title: "Continuar",
+                margin: 12,
+              ),
+            ),
+          )
         ],
       );
     }
@@ -408,9 +408,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             children: [
               const MyBackButton(
                 title: "Asistente de Registro",
+                hasBottomDivider: false,
               ),
               const SizedBox(
-                height: 20,
+                height: 5,
               ),
               Container(
                 alignment: Alignment.topLeft,
@@ -514,6 +515,16 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                thickness: 2,
+                color: Color(0xFFDDDDDD),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -525,7 +536,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8.0),
-                          border: Border.all(color: Colors.grey, width: 2.0)),
+                          border:
+                              Border.all(color: Color(0xFFDDDDDD), width: 2.0)),
                       child: getActiveStepWidget()),
                 ),
               ),
