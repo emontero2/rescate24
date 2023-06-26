@@ -294,8 +294,19 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       return GestureDetector(
           onTap: () {
             setState(() {
-                    activeStep++;
-                  });
+              if (activeStep == 3) {
+                addPerson();
+                dispose();
+                Navigator.pop(context);
+              } else {
+                if (activeStep == 0) {
+                  DocumentReader.showScanner();
+                } else {
+                  activeStep++;
+                  activeStep++;
+                }
+              }
+            });
           },
           child: getButton());
     } else if (activeStep == 3) {
@@ -312,13 +323,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                      activeStep++;
-                      activeStep++;
-                    }
-                  }
                   activeStep++;
-                    }
-                  }
                 });
               },
               child: getButton())
@@ -344,10 +349,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             child: GestureDetector(
               onTap: () {
                 setState(() {
+                  if (activeStep == 1 && !isAnythingEmpty() ||
+                      activeStep == 2) {
                     activeStep++;
                     activeStep++;
-                  }
-                  activeStep++;
                   }
                 });
               },
