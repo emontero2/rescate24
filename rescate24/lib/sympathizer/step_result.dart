@@ -14,7 +14,8 @@ class StepResult extends StatelessWidget {
       required this.birthDay,
       required this.province,
       required this.sector,
-      required this.municipality})
+      required this.municipality,
+      required this.direction})
       : super(key: key);
   final String name;
   final Uint8List? doc_image;
@@ -24,6 +25,7 @@ class StepResult extends StatelessWidget {
   final String province;
   final String sector;
   final String municipality;
+  final String direction;
 
   @override
   Widget build(BuildContext context) {
@@ -141,16 +143,15 @@ class StepResult extends StatelessWidget {
                 )
               ],
             ),
-            const MyDataInfo(title: "Provincia", description: "Santo Domingo"),
+            MyDataInfo(title: "Provincia", description: province),
             const SizedBox(
               height: 5,
             ),
-            const MyDataInfo(
-                title: "Municipio", description: "Distrito Nacional"),
+            MyDataInfo(title: "Municipio", description: municipality),
             const SizedBox(
               height: 5,
             ),
-            const MyDataInfo(title: "Recinto", description: "Las caobas"),
+            MyDataInfo(title: "Recinto", description: direction),
             const SizedBox(
               height: 5,
             ),

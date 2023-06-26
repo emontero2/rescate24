@@ -197,6 +197,7 @@ class _Step3State extends State<Step3> {
                       });
                     },
                     items: direction
+                        .where((e) => e.province == provinceSelected)
                         .map((e) => e.municipe)
                         .toSet()
                         .map((e) => DropdownMenuItem<String>(

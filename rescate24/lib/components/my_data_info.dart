@@ -20,7 +20,9 @@ class MyDataInfo extends StatelessWidget {
         SizedBox(
           width: 5,
         ),
-        Text(description)
+        ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 150),
+            child: Text(description))
       ],
     );
   }

@@ -89,7 +89,7 @@ class Person {
   static List<Person> generatePerson() {
     return List.generate(
         5,
-        (index) => Person("Peter", "Mansueta", "402-239302-3", "M", false, null,
-            "29-19-2023"));
+        (index) => Person("Irlanda Montero Figuereo", "Mansueta",
+            "402-239302-3", "M", false, null, "29-19-2023"));
   }
 }

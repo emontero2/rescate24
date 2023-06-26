@@ -44,6 +44,7 @@ String _name = "";
 String _genre = "";
 String _birthDay = "";
 String _documentNumber = "";
+String _direction = "";
 Image _portrait = Image.asset("lib/images/portrait.png");
 Image _docImage = Image.asset("lib/images/id.png");
 List<List<String>> _scenarios = [];
@@ -81,6 +82,7 @@ Widget getActiveStepWidget() {
       province: provinceController.text,
       sector: sectorController.text,
       municipality: MunicipeController.text,
+      direction: _direction,
     );
   } else if (activeStep == 3) {
     return StepFinish(
@@ -125,6 +127,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
     _genre = "";
     _birthDay = "";
     _documentNumber = "";
+    _direction = "";
     _portrait = Image.asset("lib/images/portrait.png");
     _docImage = Image.asset("lib/images/id.png");
     MunicipeController.clear();
@@ -189,6 +192,8 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
         .textFieldValueByType(EVisualFieldType.FT_ADDRESS_MUNICIPALITY);
     var sector =
         await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_AREA);
+    var direction =
+        await results.textFieldValueByType(EVisualFieldType.FT_ADDRESS_STREET);
 
     MunicipeController.text = municipe ?? "";
     provinceController.text = province ?? "";
@@ -199,6 +204,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       _documentNumber = documentNumber ?? "";
       _birthDay = birthDay ?? "No encontrado";
       _genre = genre ?? "No encontrado";
+      _direction = direction ?? "No encontrado";
       _docImage = Image.asset('assets/images/id.png');
       _portrait = Image.asset('assets/images/portrait.png');
       if (doc != null) {
@@ -294,17 +300,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
       return GestureDetector(
           onTap: () {
             setState(() {
-              if (activeStep == 3) {
-                addPerson();
-                dispose();
-                Navigator.pop(context);
+              if (activeStep == 0) {
+                DocumentReader.showScanner();
               } else {
-                if (activeStep == 0) {
-                  DocumentReader.showScanner();
-                } else {
-                  activeStep++;
-                  activeStep++;
-                }
+                activeStep++;
               }
             });
           },
@@ -323,7 +322,9 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
           GestureDetector(
               onTap: () {
                 setState(() {
-                  activeStep++;
+                  addPerson();
+                  dispose();
+                  Navigator.pop(context);
                 });
               },
               child: getButton())
@@ -351,7 +352,6 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
                 setState(() {
                   if (activeStep == 1 && !isAnythingEmpty() ||
                       activeStep == 2) {
-                    activeStep++;
                     activeStep++;
                   }
                 });
