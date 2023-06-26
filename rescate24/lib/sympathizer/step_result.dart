@@ -152,11 +152,6 @@ class StepResult extends StatelessWidget {
               height: 5,
             ),
             MyDataInfo(title: "Recinto", description: direction),
-            const SizedBox(
-              height: 5,
-            ),
-            const MyDataInfo(
-                title: "Colegio", description: "Las caobas high school")
           ],
         ),
       ),
