@@ -53,42 +53,94 @@ class AddSympathizerPage extends StatelessWidget {
             ),
             const CircleAvatar(
               backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
-            )
+            ),
+            const SizedBox(
+              width: 15,
+            ),
           ],
         ),
         body: Column(
           children: [
             const MyBackButton(
-              title: "Registro y Validacion de Militante y/o Simpatizante",
+              title: "Registro y Validación de Militante y/o Simpatizante",
             ),
             const SizedBox(
               height: 20,
             ),
             const Text(
               "Localizador de Simpatizante Registrado",
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                  child: MyTextField(
-                      controller: cedulaController,
-                      hintText: "Ingrese el numero del localizador",
-                      obscureText: false),
+                  child: SizedBox(
+                    height: 40,
+                    child: MyTextField(
+                        controller: cedulaController,
+                        hintText: "Ingrese el numero del localizador",
+                        obscureText: false),
+                  ),
                 ),
-                IconButton(
-                    onPressed: () => {_showSimpleDialog()},
-                    icon: const Icon(Icons.camera_alt))
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 2, color: Color(0xFFDDDDDD)),
+                      color: Color(0xFFF5F5F5),
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: IconButton(
+                      onPressed: () => {_showSimpleDialog()},
+                      icon: const Icon(
+                        Icons.camera_alt_outlined,
+                        color: Color(0xFF560265),
+                      )),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             const MyButton(title: "Buscar"),
             const SizedBox(
-              height: 50,
+              height: 25,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      height: 1,
+                    ),
+                  ),
+                  Text(
+                    " Ó ",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      height: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 25,
             ),
             const Text(
               "Inicia Asistente de registro \n de nuevo simpatizante",

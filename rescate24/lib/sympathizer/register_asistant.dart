@@ -400,7 +400,10 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
             ),
             const CircleAvatar(
               backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
-            )
+            ),
+            const SizedBox(
+              width: 15,
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -409,6 +412,7 @@ class _RegisterAsistantState extends State<RegisterAsistant> {
               const MyBackButton(
                 title: "Asistente de Registro",
                 hasBottomDivider: false,
+                isCentered: true,
               ),
               const SizedBox(
                 height: 5,

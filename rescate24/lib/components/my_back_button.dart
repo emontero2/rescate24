@@ -6,8 +6,13 @@ class MyBackButton extends StatelessWidget {
   final String title;
   final Color? color;
   final bool? hasBottomDivider;
+  final bool? isCentered;
   const MyBackButton(
-      {Key? key, required this.title, this.color, this.hasBottomDivider})
+      {Key? key,
+      required this.title,
+      this.color,
+      this.hasBottomDivider,
+      this.isCentered})
       : super(key: key);
 
   @override
@@ -30,17 +35,18 @@ class MyBackButton extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Flex(direction: Axis.horizontal, children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: color ?? Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ])
+            if (isCentered == true) Spacer(),
+            Text(
+              title,
+              textAlign:
+                  isCentered == true ? TextAlign.center : TextAlign.start,
+              style: TextStyle(
+                  color: color ?? Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (isCentered == true) Spacer()
           ],
         ),
       ),

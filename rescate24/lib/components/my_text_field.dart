@@ -35,6 +35,8 @@ class MyTextField extends StatelessWidget {
                     child: SvgPicture.asset(
                       startIcon ?? "",
                       color: Colors.grey,
+                      width: 20,
+                      height: 20,
                     ),
                   ),
             prefixIconConstraints:

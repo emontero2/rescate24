@@ -68,7 +68,7 @@ class StepResult extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MyDataInfo(title: "Cedula: ", description: docNumber),
+                    MyDataInfo(title: "Cédula: ", description: docNumber),
                     const SizedBox(
                       height: 5,
                     ),
@@ -76,7 +76,7 @@ class StepResult extends StatelessWidget {
                     const SizedBox(
                       height: 5,
                     ),
-                    MyDataInfo(title: "Genero: ", description: genre),
+                    MyDataInfo(title: "Género: ", description: genre),
                     const SizedBox(
                       height: 5,
                     ),
@@ -91,7 +91,7 @@ class StepResult extends StatelessWidget {
             Row(
               children: [
                 const Text(
-                  "Direccion",
+                  "Dirección",
                   style: TextStyle(
                       color: Color(0xFF292929),
                       fontWeight: FontWeight.bold,
@@ -127,7 +127,7 @@ class StepResult extends StatelessWidget {
             Row(
               children: [
                 const Text(
-                  "Lugar de Votacion",
+                  "Lugar de Votación​",
                   style: TextStyle(
                       color: Color(0xFF292929),
                       fontWeight: FontWeight.bold,
@@ -152,6 +152,10 @@ class StepResult extends StatelessWidget {
               height: 5,
             ),
             MyDataInfo(title: "Recinto", description: direction),
+            const SizedBox(
+              height: 5,
+            ),
+            MyDataInfo(title: "Colegio", description: ""),
           ],
         ),
       ),

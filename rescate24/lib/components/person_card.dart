@@ -13,7 +13,7 @@ class PersonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -59,11 +59,16 @@ class PersonCard extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Icon(
-              person.liveness ? Icons.check_circle : Icons.dangerous,
-              color: person.liveness ? Colors.green : Colors.red,
-              size: 35,
-            )
+            Container(
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 2, color: Color(0xFFDDDDDD)),
+                  color: Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: SvgPicture.asset(
+                "lib/images/whatsapp.svg",
+              ),
+            ),
           ],
         ),
       ),

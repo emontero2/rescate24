@@ -35,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
               height: 10,
             ),
             const Text(
-              "Dashboard",
+              "Inicio",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,

@@ -72,10 +72,7 @@ class _LeadersScreenState extends State<LeadersScreen> {
             result.liveness == Regula.LivenessStatus.PASSED
                 ? "passed"
                 : "unknown");
-        if (result.exception == null ||
-            result.exception?.errorCode == Regula.LivenessErrorCode.CANCELLED) {
-          liveness(person);
-        } else {
+        if (result.exception == null && _liveness == "passed") {
           matchFaces(person);
         }
       });
@@ -130,8 +127,8 @@ class _LeadersScreenState extends State<LeadersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Person> persons =
-        Provider.of<PersonModel>(context, listen: false).person;
+    List<Person> persons = Person.generatePerson();
+    // Provider.of<PersonModel>(context, listen: false).person;
     return Column(
       children: [
         const MyBackButton(title: "Listado de simpatizantes"),
@@ -155,20 +152,45 @@ class _LeadersScreenState extends State<LeadersScreen> {
                         )
                       ]),
                     )),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Flexible(
-                      child: MyTextField(
-                        controller: controller,
-                        hintText: "buscar",
-                        obscureText: false,
+                      child: SizedBox(
+                        height: 40,
+                        child: MyTextField(
+                          controller: controller,
+                          hintText: "Buscar",
+                          obscureText: false,
+                          startIcon: "lib/images/search.svg",
+                        ),
                       ),
                     ),
-                    const IconButton(onPressed: null, icon: Icon(Icons.tune)),
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 2, color: Color(0xFFDDDDDD)),
+                          color: Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: IconButton(
+                          onPressed: () => {},
+                          icon: const Icon(
+                            Icons.tune,
+                          )),
+                    ),
                     SizedBox(
                       width: 10,
                     )
                   ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  color: Colors.grey,
                 ),
                 SizedBox(
                     height: 500,

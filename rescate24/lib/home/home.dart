@@ -74,17 +74,18 @@ class _HomeState extends State<Home> {
     Dashboard(
       isDatabaseReady: false,
     ),
+    LeadersScreen(),
     ActivitiesScreen(),
     NewsScreen(),
-    LeadersScreen(),
   ];
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: SvgPicture.asset("lib/images/R24logo1.svg"),
         ),
         backgroundColor: const Color(0xFF560265),
@@ -114,7 +115,10 @@ class _HomeState extends State<Home> {
             child: const CircleAvatar(
               backgroundImage: AssetImage("lib/images/profile_pic.jpeg"),
             ),
-          )
+          ),
+          const SizedBox(
+            width: 15,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -157,6 +161,12 @@ class _HomeState extends State<Home> {
               label: "Inicio"),
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
+                "lib/images/group_icon.svg",
+                color: Color(0xFF5F0069),
+              ),
+              label: "Dirigentes"),
+          BottomNavigationBarItem(
+              icon: SvgPicture.asset(
                 "lib/images/calendar_icon.svg",
                 color: Color(0xFF5F0069),
               ),
@@ -166,17 +176,12 @@ class _HomeState extends State<Home> {
                 "lib/images/news_icon.svg",
                 color: Color(0xFF5F0069),
               ),
-              label: "Noticias"),
-          BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "lib/images/group_icon.svg",
-                color: Color(0xFF5F0069),
-              ),
-              label: "Dirigentes")
+              label: "Noticias")
         ],
         unselectedItemColor: Color(0xFF5F0069),
         selectedItemColor: Color(0xFF5F0069),
         showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );

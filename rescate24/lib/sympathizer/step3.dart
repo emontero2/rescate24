@@ -1,9 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:excel/excel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rescate24/components/my_text_field.dart';
@@ -40,9 +36,7 @@ class _Step3State extends State<Step3> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     readFile();
   }
 
@@ -57,36 +51,34 @@ class _Step3State extends State<Step3> {
       for (var row in excel.tables[table]!.rows) {
         var d = Direccion();
         if (row.any((element) =>
-            element?.value?.toString().toLowerCase() ==
-            "Provincia".toLowerCase())) {
-          print("im here");
+            element?.value?.toString().toUpperCase() ==
+            "Provincia".toUpperCase())) {
           Data? data = row.firstWhere((element) =>
-              element?.value?.toString().toLowerCase() ==
-              "Provincia".toLowerCase());
+              element?.value?.toString().toUpperCase() ==
+              "Provincia".toUpperCase());
           provinceIndex = data?.colIndex;
-          print(provinceIndex);
         }
         // email variable is for Name of Column Heading for Email
         if (row.any((element) =>
-            element?.value?.toString().toLowerCase() ==
-            "Municipio".toLowerCase())) {
-          print("im here");
+            element?.value?.toString().toUpperCase() ==
+            "Municipio".toUpperCase())) {
           Data? data = row.firstWhere((element) =>
-              element?.value?.toString().toLowerCase() ==
-              "Municipio".toLowerCase());
+              element?.value?.toString().toUpperCase() ==
+              "Municipio".toUpperCase());
           municipeIndex = data?.colIndex;
         }
+
         if (provinceIndex != null && municipeIndex != null) {
-          if (row[provinceIndex]?.value.toString().toLowerCase() !=
-              "Provincia".toLowerCase()) {
+          if (row[provinceIndex]?.value.toString().toUpperCase() !=
+              "Provincia".toUpperCase()) {
             setState(() {
-              d.province = row[provinceIndex]!.value.toString().toLowerCase();
+              d.province = row[provinceIndex]!.value.toString().toUpperCase();
             });
           }
-          if (row[municipeIndex]?.value.toString().toLowerCase() !=
-              "Municipio".toLowerCase()) {
+          if (row[municipeIndex]?.value.toString().toUpperCase() !=
+              "Municipio".toUpperCase()) {
             setState(() {
-              d.municipe = row[municipeIndex]!.value.toString().toLowerCase();
+              d.municipe = row[municipeIndex]!.value.toString().toUpperCase();
             });
           }
         }
@@ -94,13 +86,13 @@ class _Step3State extends State<Step3> {
       }
     }
     if (direction.any((Direccion element) =>
-        element.municipe.toLowerCase() ==
-        MunicipeController.text.toLowerCase())) {
+        element.municipe.toUpperCase() ==
+        MunicipeController.text.toUpperCase())) {
       var dd = direction.firstWhere((Direccion element) =>
-          element.municipe.toLowerCase() ==
-          MunicipeController.text.toLowerCase());
+          element.municipe.toUpperCase() ==
+          MunicipeController.text.toUpperCase());
       setState(() {
-        municipeSelected = MunicipeController.text.toLowerCase();
+        municipeSelected = MunicipeController.text.toUpperCase();
         provinceSelected = dd.province;
         provinceController.text = dd.province;
       });
@@ -117,7 +109,7 @@ class _Step3State extends State<Step3> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
-              "Direccion",
+              "Dirección de Residencia",
               textAlign: TextAlign.start,
               style: TextStyle(
                   color: Colors.black,
@@ -233,7 +225,7 @@ class _Step3State extends State<Step3> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
-              "Informacion de Contacto",
+              "Información de Contacto",
               textAlign: TextAlign.start,
               style: TextStyle(
                   color: Colors.black,
@@ -247,7 +239,7 @@ class _Step3State extends State<Step3> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
-              "Telefono Residencial:",
+              "Teléfono Residencial:",
               textAlign: TextAlign.start,
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -285,7 +277,7 @@ class _Step3State extends State<Step3> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Text(
-              "Correo electronico (Email):",
+              "Correo electrónico (Email):",
               textAlign: TextAlign.start,
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
