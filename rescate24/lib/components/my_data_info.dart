@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class MyDataInfo extends StatelessWidget {
   final String title;
   final String description;
-  const MyDataInfo({Key? key, required this.title, required this.description})
+  final double? maxWidth;
+  const MyDataInfo(
+      {Key? key, required this.title, required this.description, this.maxWidth})
       : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class MyDataInfo extends StatelessWidget {
           width: 5,
         ),
         ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 100),
+            constraints: BoxConstraints(maxWidth: maxWidth ?? 100),
             child: Text(description))
       ],
     );

@@ -110,15 +110,27 @@ class StepResult extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MyDataInfo(title: "Provincia", description: province),
+                MyDataInfo(
+                  title: "Provincia",
+                  description: province,
+                  maxWidth: 200,
+                ),
                 const SizedBox(
                   height: 5,
                 ),
-                MyDataInfo(title: "Municipio", description: municipality),
+                MyDataInfo(
+                  title: "Municipio",
+                  description: municipality,
+                  maxWidth: 200,
+                ),
                 const SizedBox(
                   height: 5,
                 ),
-                MyDataInfo(title: "Sector", description: sector),
+                MyDataInfo(
+                  title: "Sector",
+                  description: sector,
+                  maxWidth: 200,
+                ),
               ],
             ),
             const SizedBox(
@@ -143,15 +155,27 @@ class StepResult extends StatelessWidget {
                 )
               ],
             ),
-            MyDataInfo(title: "Provincia", description: province),
+            MyDataInfo(
+              title: "Provincia",
+              description: province,
+              maxWidth: 200,
+            ),
             const SizedBox(
               height: 5,
             ),
-            MyDataInfo(title: "Municipio", description: municipality),
+            MyDataInfo(
+              title: "Municipio",
+              description: municipality,
+              maxWidth: 200,
+            ),
             const SizedBox(
               height: 5,
             ),
-            MyDataInfo(title: "Recinto", description: direction),
+            MyDataInfo(
+              title: "Recinto",
+              description: direction,
+              maxWidth: 200,
+            ),
             const SizedBox(
               height: 5,
             ),

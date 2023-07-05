@@ -9,30 +9,37 @@ class PersonCard extends StatelessWidget {
   PersonCard({Key? key, required this.person, this.onTap}) : super(key: key);
   final Person person;
   Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
+    Image img = person.portrait != null
+        ? Image.memory(
+            person.portrait!,
+          )
+        : Image.asset(
+            "lib/images/portrait.png",
+          );
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            person.portrait != null
-                ? Image.memory(
-                    person.portrait!,
-                    width: 100,
-                    height: 100,
-                  )
-                : Image.asset(
-                    "lib/images/portrait.png",
-                    width: 100,
-                    height: 100,
-                  ),
+            CircleAvatar(
+              backgroundImage: img.image,
+              backgroundColor: Colors.white,
+              radius: 25,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MyDataInfo(title: "Cedula: ", description: person.docNumber),
-                MyDataInfo(title: "Nombre:", description: person.name),
+                MyDataInfo(
+                  title: "Nombre:",
+                  description: person.name,
+                  maxWidth: 70,
+                ),
                 MyDataInfo(title: "Genero:", description: person.gnere),
                 MyDataInfo(title: "Nacimiento: ", description: person.birthDay),
                 if (person.liveness == false)
@@ -55,9 +62,6 @@ class PersonCard extends StatelessWidget {
                     ),
                   ),
               ],
-            ),
-            const SizedBox(
-              width: 10,
             ),
             Container(
               height: 30,

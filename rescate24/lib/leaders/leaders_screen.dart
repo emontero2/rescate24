@@ -127,8 +127,9 @@ class _LeadersScreenState extends State<LeadersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Person> persons = Person.generatePerson();
-    // Provider.of<PersonModel>(context, listen: false).person;
+    List<Person> persons =
+        //Person.generatePerson();
+        Provider.of<PersonModel>(context, listen: false).person;
     return Column(
       children: [
         const MyBackButton(title: "Listado de simpatizantes"),
